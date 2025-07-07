@@ -1,0 +1,13 @@
+# Node dependencies
+node_modules/
+npm-debug.log
+
+# Eleventy output
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python virtual environment
+.venv/
