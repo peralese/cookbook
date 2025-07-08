@@ -1,6 +1,11 @@
+const slugify = require("slugify");
+
 module.exports = function(eleventyConfig) {
-  // Copy static content (your JSON) to output
   eleventyConfig.addPassthroughCopy("content");
+
+  eleventyConfig.addFilter("slug", input =>
+    slugify(input, { lower: true, strict: true })
+  );
 
   return {
     dir: {
@@ -11,3 +16,4 @@ module.exports = function(eleventyConfig) {
     templateFormats: ["njk", "md", "html"]
   };
 };
+

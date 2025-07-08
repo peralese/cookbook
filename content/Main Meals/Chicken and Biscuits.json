@@ -1,6 +1,6 @@
 {
-  "title": "Chicken and Biscuits Requires:  Biscuits as made for the “Williamsburg Chicken and Biscuits” recipe, see the “Breads, Cakes, and Cookies” folder.",
-  "requires": "",
+  "title": "Chicken and Biscuits",
+  "requires": "Biscuits as made for the “Williamsburg Chicken and Biscuits” recipe, see the “Breads, Cakes, and Cookies” folder.",
   "ingredients": [
     "4 to 5 chicken breasts",
     "2 ribs of celery, chopped",

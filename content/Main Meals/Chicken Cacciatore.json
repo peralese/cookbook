@@ -1,6 +1,6 @@
 {
-  "title": "Chicken Cacciatore Requires:  Emeril’s Essence Creole Seasoning.",
-  "requires": "",
+  "title": "Chicken Cacciatore",
+  "requires": "Emeril’s Essence Creole Seasoning.",
   "ingredients": [
     "8 pieces of chicken (or one whole chicken cut into 8 pieces)",
     "1 cup flour",

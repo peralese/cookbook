@@ -1,6 +1,6 @@
 {
-  "title": "Pumpkin Pie Requires:  Pastry pie dough for a 9-inch pie.",
-  "requires": "",
+  "title": "Pumpkin Pie",
+  "requires": "Pastry pie dough for a 9-inch pie.",
   "ingredients": [
     "1 15-ounce can pure pumpkin",
     "¾ cup sugar",

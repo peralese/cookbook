@@ -1,6 +1,6 @@
 {
-  "title": "Danish Braid Requires:  :  Half of the Danish Pastry Dough, the recipe for which is in the “Breads, Cakes, and Cookies” folder.  The Apricot, Prune, or Fresh Berry Jam Fillings, the recipes for which are in the “Miscellaneous” folder.  And, the Confectioner’s Cream or Almond Fillings, the recipes for which are also in the “Miscellaneous” folder.",
-  "requires": "",
+  "title": "Danish Braid",
+  "requires": "Half of the Danish Pastry Dough, the recipe for which is in the “Breads, Cakes, and Cookies” folder.  The Apricot, Prune, or Fresh Berry Jam Fillings, the recipes for which are in the “Miscellaneous” folder.  And, the Confectioner’s Cream or Almond Fillings, the recipes for which are also in the “Miscellaneous” folder.",
   "ingredients": [
     "1 recipe Apricot, Prune, or Fresh Berry Jam Filling",
     "1 recipe Confectioner’s Cream or Almond Filling",

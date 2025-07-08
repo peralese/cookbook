@@ -1,0 +1,23 @@
+---
+pagination:
+  data: categories
+  size: 1
+  alias: category
+permalink: "/categories/{{ category | slug }}/index.html"
+layout: base.njk
+---
+
+<h1>{{ category }}</h1>
+
+<ul>
+  {% for recipe in recipes %}
+    {% if recipe.category == category %}
+      <li>
+        <a href="/recipes/{{ recipe.filename | slug }}/">
+          {{ recipe.title }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+

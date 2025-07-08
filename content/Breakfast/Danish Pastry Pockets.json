@@ -1,6 +1,6 @@
 {
-  "title": "Danish Pastry Pockets Requires:  The Danish Pastry Dough, the recipe for which is in the “Breads, Cakes, and Cookies” folder.  The Apricot, Prune, or Fresh Berry Jam Fillings, the recipes for which are in the “Miscellaneous” folder.  And, the Confectioner’s Cream or Almond Fillings, the recipes for which are also in the “Miscellaneous” folder.",
-  "requires": "",
+  "title": "Danish Pastry Pockets ",
+  "requires": "The Danish Pastry Dough, the recipe for which is in the “Breads, Cakes, and Cookies” folder.  The Apricot, Prune, or Fresh Berry Jam Fillings, the recipes for which are in the “Miscellaneous” folder.  And, the Confectioner’s Cream or Almond Fillings, the recipes for which are also in the “Miscellaneous” folder.",
   "ingredients": [
     "Danish Pastry dough, chilled",
     "1 recipe Apricot, Prune, or Fresh Berry Jam Filling",

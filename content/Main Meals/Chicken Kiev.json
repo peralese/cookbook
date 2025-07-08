@@ -1,6 +1,6 @@
 {
-  "title": "Chicken Kiev Requires:  Emeril’s Essence  (the recipe is in the Miscellaneous folder).",
-  "requires": "",
+  "title": "Chicken Kiev",
+  "requires": "Emeril’s Essence  (the recipe is in the Miscellaneous folder).",
   "ingredients": [
     "4 boneless, skinless chicken breasts, about 6 ounces each",
     "8 ounces butter",

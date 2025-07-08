@@ -1,6 +1,6 @@
 {
-  "title": "Tortilla Soup Requires:  This recipe requires “red salsa”, the recipe for which is in the “Sauces, Stock, and Dressings” folder.",
-  "requires": "",
+  "title": "Tortilla Soup",
+  "requires": "This recipe requires “red salsa”, the recipe for which is in the “Sauces, Stock, and Dressings” folder.",
   "ingredients": [
     "2 tablespoons vegetable oil",
     "1 medium to large yellow onion, diced",
