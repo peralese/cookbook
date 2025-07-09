@@ -16,12 +16,13 @@ Built using [Eleventy (11ty)](https://www.11ty.dev/) as a static site generator,
 ├── src/                 # Eleventy templates and layouts
 │   ├── index.njk        # Homepage - lists categories
 │   ├── categories.njk   # Category pages - lists recipes in that category
-│   ├── recipe.njk       # Recipe detail pages
+│   ├── recipe.njk       # Recipe detail pages with breadcrumbs
 │   ├── layouts/
-│   │   └── base.njk     # Base layout
+│   │   └── base.njk     # Base layout with site-wide navigation and breadcrumbs
+│   ├── styles.css       # Site styling
 │   └── _data/
 │       ├── categories.js  # Reads all category folders
-│       └── recipes.js     # Reads all recipes with category mapping
+│       └── recipes.js     # Reads all recipes, adds slugs for category/filenames
 ├── .eleventy.js         # Eleventy configuration
 ├── package.json         # Node project metadata and build scripts
 ├── add_recipe.py        # Python CLI to add new recipes as JSON
@@ -70,11 +71,11 @@ python add_recipe.py
 ```
 
 Prompts you for:
-- Title
-- Category (choosing from existing folders)
-- Ingredients
-- Instructions
-- Optional fields (Remarks, Yield, Source, Requires)
+- Title (required)
+- Category (required)
+- Ingredients (required)
+- Instructions (required)
+- Optional fields: Requires, Remarks, Yield, Source
 
 Generates a new `.json` recipe file in the correct `content/` subfolder.
 
@@ -82,7 +83,7 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 
 ## 🌐 Deployment
 
-The `dist/` folder contains the complete static site.
+The `dist/` folder contains the complete static site.  
 
 You can deploy it anywhere static HTML is supported:
 
@@ -94,20 +95,30 @@ You can deploy it anywhere static HTML is supported:
 
 ---
 
-## ⚙️ Features Implemented
+## ✅ Features Implemented
 
 ✅ Home page listing all categories automatically from `content/`  
 ✅ Dynamic category pages listing recipes in that category  
 ✅ Recipe detail pages generated automatically from JSON  
-✅ Unique permalinks including category and recipe slug to avoid conflicts  
-✅ Clean URL structure:
-
+✅ Unique permalinks including **slugified** category and recipe:
 ```
 /categories/01-breakfast/
-/recipes/01-breakfast/buttermilk-biscuits/
+/recipes/01-breakfast/baking-powder-biscuits/
 ```
+✅ Slugs computed in `_data/recipes.js` to ensure consistent URLs  
+✅ Dynamic breadcrumbs for clear navigation:
 
-✅ Fully data-driven using Eleventy pagination and data files
+- On category pages:
+  ```
+  Home / 01 - Breakfast
+  ```
+- On recipe pages:
+  ```
+  Home / 01 - Breakfast / Baking Powder Biscuits
+  ```
+
+✅ Site-wide navigation header with links to Home and Categories  
+✅ Fully responsive, clean CSS styling
 
 ---
 
@@ -123,12 +134,13 @@ You can deploy it anywhere static HTML is supported:
 
 ✅ Basic site structure with categories and recipes  
 ✅ Command-line recipe add tool  
-✅ Category pages listing all recipes in that category  
-✅ Recipe detail pages from JSON with unique permalinks  
-⬜️ Styling / theming  
-⬜️ Navigation / breadcrumbs  
-⬜️ Deployment setup (GitHub Pages / Netlify)  
-⬜️ Optional search functionality  
+✅ Category pages with breadcrumb navigation  
+✅ Recipe detail pages with unique permalinks and breadcrumbs  
+⬜️ Add a /categories/ index page listing all categories
+⬜️ Improve CSS design and theming
+⬜️ Deployment setup (GitHub Pages / Netlify)
+⬜️ Optional search/filtering
+⬜️ Print-friendly styling
 
 ---
 
