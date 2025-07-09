@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const slugify = require("slugify");
+
 
 module.exports = () => {
   const contentRoot = path.join(__dirname, "..", "..", "content");
@@ -19,6 +21,7 @@ module.exports = () => {
       const data = JSON.parse(fs.readFileSync(recipePath, "utf8"));
       data.category = category;
       data.filename = file.replace(".json", "");
+      data.slugCategory = slugify(category, { lower: true, strict: true });
       allRecipes.push(data);
     });
   });
