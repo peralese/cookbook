@@ -3,8 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>{{ title }}</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <header>
+  <nav>
+    <a href="/">Home</a>
+  </nav>
+  </header>
+<div class="container">
+  {% if breadcrumbs %}
+    <nav class="breadcrumbs">
+      {{ breadcrumbs | safe }}
+    </nav>
+  {% endif %}
+  
   {{ content | safe }}
+</div>
+  <footer>
+    <p>&copy; Family Cookbook</p>
+  </footer>
 </body>
 </html>
+

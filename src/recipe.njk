@@ -3,8 +3,10 @@ pagination:
   data: recipes
   size: 1
   alias: recipe
-permalink: "/recipes/{{ recipe.filename | slug }}/index.html"
+permalink: "/recipes/{{ recipe.category | slug }}/{{ recipe.filename | slug }}/index.html"
 layout: base.njk
+eleventyComputed:
+  breadcrumbs: "<a href='/'>Home</a> / <a href='/categories/{{ recipe.category | slug }}/'>{{ recipe.category }}</a> / {{ recipe.title }}"
 ---
 
 <h1>{{ recipe.title }}</h1>

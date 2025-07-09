@@ -5,6 +5,8 @@ pagination:
   alias: category
 permalink: "/categories/{{ category | slug }}/index.html"
 layout: base.njk
+eleventyComputed:
+  breadcrumbs: "<a href='/'>Home</a> / {{ category }}"
 ---
 
 <h1>{{ category }}</h1>
