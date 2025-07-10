@@ -15,7 +15,7 @@ eleventyComputed:
   {% for recipe in recipes %}
     {% if recipe.category == category %}
       <li>
-        <a href="/recipes/{{ recipe.filename | slug }}/">
+        <a href="/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/">
           {{ recipe.title }}
         </a>
       </li>

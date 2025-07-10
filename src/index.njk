@@ -6,11 +6,11 @@ breadcrumbs: ""
 
 <h1>Welcome to My Family Cookbook</h1>
 <p>Select a category to view recipes:</p>
+<input type="text" id="searchBox" placeholder="Search categories..." />
 
-<ul>
+<ul id="categoriesList">
   {% for category in categories %}
-    <li>
-      <a href="/categories/{{ category | slug }}/">{{ category }}</a>
-    </li>
+    <li><a href="/categories/{{ category | slug }}/">{{ category }}</a></li>
   {% endfor %}
 </ul>
+

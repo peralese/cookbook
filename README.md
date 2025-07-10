@@ -136,8 +136,7 @@ You can deploy it anywhere static HTML is supported:
 ✅ Command-line recipe add tool  
 ✅ Category pages with breadcrumb navigation  
 ✅ Recipe detail pages with unique permalinks and breadcrumbs  
-⬜️ Add a /categories/ index page listing all categories
-⬜️ Improve CSS design and theming
+✅ Improve CSS design and theming
 ⬜️ Deployment setup (GitHub Pages / Netlify)
 ⬜️ Optional search/filtering
 ⬜️ Print-friendly styling
