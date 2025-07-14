@@ -1,0 +1,21 @@
+---
+layout: base.njk
+title: Recipes
+permalink: /categories/index.html
+breadcrumbs: "<a href='/'>Home</a> / Recipes"
+---
+
+<h1>Recipes</h1>
+
+<p>Find a category below or start typing to filter:</p>
+
+<input type="text" id="searchBox" placeholder="Search categories..." />
+
+<p>Select a category to view recipes:</p>
+
+<ul id="categoriesList">
+  {% for category in categories %}
+    <li><a href="/categories/{{ category | slug }}/">{{ category }}</a></li>
+  {% endfor %}
+</ul>
+

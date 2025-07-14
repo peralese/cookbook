@@ -7,7 +7,7 @@ from pathlib import Path
 # User Settings
 # ------------
 
-CONTENT_ROOT = Path(r"D:\Projects\cookbook\content")  # Change this to your real path!
+CONTENT_ROOT = Path(r"C:\Users\8A1493897\Development Workspace\python projects\cookbook\content")  # Change this to your real path!
 
 # ------------
 # Helper Functions
