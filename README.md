@@ -105,7 +105,6 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 ⬜️ Deployment setup (GitHub Pages / Netlify)  
 ⬜️ Print-friendly styling  
 ⬜️ Recipe image support  
-⬜️ Personal feedback/notes system  
 ⭐ Optional “feedback” field in JSON  
 ⭐ Display on recipe detail pages  
 ⭐ Capture family memories, tasting notes, planned variations  
@@ -137,5 +136,9 @@ Built for our family to preserve, share, and enjoy our favorite recipes—across
 ## 📜 License
 
 Private/personal project. Feel free to fork and adapt for your own family cookbook!
+
+## Author
+
+Erick Perales  — IT Architect, Cloud Migration Specialist
 
 
