@@ -92,6 +92,8 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 
 ## ✅ Roadmap and Progress
 
+## ✅ Roadmap and Progress
+
 ✅ Basic site structure with categories and recipes  
 ✅ Command-line recipe add tool  
 ✅ Category pages with breadcrumb navigation  
@@ -100,21 +102,19 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 ✅ Search/filtering on the Categories Index page  
 ✅ Dedicated Categories Index Page (/categories/) with live filtering  
 ✅ Updated header navigation (Home | Recipes)  
-✅ Breadcrumbs show "Home / Recipes / Category / Recipe"
+✅ Breadcrumbs show "Home / Recipes / Category / Recipe"  
+✅ Print-friendly styling  
+✅ All-recipes index page
 
 ⬜️ Deployment setup (GitHub Pages / Netlify)  
-⬜️ Print-friendly styling  
 ⬜️ Recipe image support  
-⭐ Optional “feedback” field in JSON  
-⭐ Display on recipe detail pages  
-⭐ Capture family memories, tasting notes, planned variations  
 ⬜️ Advanced recipe search (ingredients, title)  
 ⬜️ Tags or labels for recipes  
-⬜️ All-recipes index page  
 ⬜️ Pagination for large lists  
 ⭐ Break long category pages into multiple pages  
 ⭐ Improve usability for mobile and large collections  
 ⬜️ Mobile navigation improvements
+
 
 ---
 

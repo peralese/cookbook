@@ -26,5 +26,6 @@ module.exports = () => {
     });
   });
 
+  console.log("Loaded recipes:", allRecipes.length);
   return allRecipes;
 };

@@ -1,0 +1,22 @@
+---
+layout: base.njk
+title: All Recipes
+permalink: /recipes/index.html
+---
+
+<h1>All Recipes</h1>
+
+<p>Browse all family recipes at once:</p>
+
+<ul>
+  {% for recipe in recipes %}
+    <li>
+      <a href="/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/">
+        {{ recipe.title }}
+      </a>
+      <em>({{ recipe.category }})</em>
+    </li>
+  {% endfor %}
+</ul>
+
+
