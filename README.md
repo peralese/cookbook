@@ -114,6 +114,9 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 ⭐ Break long category pages into multiple pages  
 ⭐ Improve usability for mobile and large collections  
 ⬜️ Mobile navigation improvements
+⬜️ Local-only recipe management tools  
+⭐ Command-line and/or local web form for adding/updating JSON recipes  
+⭐ Ensures editor never deployed to public static site
 
 
 ---
