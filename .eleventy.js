@@ -5,6 +5,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/styles.css");
   eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
   eleventyConfig.addPassthroughCopy("src/search.js");
+  eleventyConfig.addPassthroughCopy("src/images");
 
 
   eleventyConfig.addFilter("slug", input =>

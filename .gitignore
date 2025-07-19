@@ -11,3 +11,10 @@ Thumbs.db
 
 # Python virtual environment
 .venv/
+
+# 🔒 Local-only Flask editor
+__pycache__/
+
+# 📸 User-uploaded images
+src/images/
+

@@ -15,6 +15,13 @@ eleventyComputed:
 <p><strong>Requires:</strong> {{ recipe.requires }}</p>
 {% endif %}
 
+{% if recipe.image %}
+  <div class="recipe-image">
+    <img src="/images/{{ recipe.image }}" alt="Photo of {{ recipe.title }}">
+  </div>
+{% endif %}
+
+
 <h2>Ingredients</h2>
 <ul>
   {% for item in recipe.ingredients %}

@@ -14,7 +14,15 @@ This project is a private family cookbook website built using [Eleventy (11ty)](
 ✅ Search/filtering on the Categories Index page  
 ✅ Dedicated `/categories/` index page with live filtering  
 ✅ Updated header navigation: Home | Recipes  
-✅ Breadcrumbs now show "Home / Recipes / Category / Recipe"
+✅ Breadcrumbs show "Home / Recipes / Category / Recipe"  
+✅ Print-friendly CSS styling  
+✅ All-recipes index page `/recipes/`  
+✅ Recipe image support (stored in `src/images`)  
+✅ Local-only web-based recipe manager (`recipe_editor.py`)  
+  • Create and update recipes  
+  • Upload and copy images to `src/images/`  
+  • View/edit content by category and recipe  
+  • Never published with the site build
 
 ---
 
@@ -45,6 +53,21 @@ Outputs the static site to the `dist/` folder.
 
 ## 🥣 Adding New Recipes
 
+Use the included **Python web tool** to create or edit recipes:
+```bash
+python recipe_editor.py
+```
+
+Open [http://localhost:5000](http://localhost:5000) in your browser.
+
+- Select a category and existing recipe to edit, or create a new one  
+- Fill in title, ingredients, instructions, optional notes, and upload an image  
+- JSON is saved to `content/<category>/...`  
+- Uploaded images are saved to `src/images/`  
+- Not published or included in site output
+
+You can still use the CLI tool as well:
+
 Use the included Python script to add new recipes interactively:
 
 ```
@@ -64,7 +87,7 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 
 ## 📂 Project Structure
 
-```
+``
 /
 ├── content/             # All recipe JSON files, organized by category
 │   ├── 01 - Breakfast/
@@ -72,20 +95,21 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 │   └── ...
 ├── src/                 # Eleventy templates and layouts
 │   ├── index.njk        # Home page - welcome / landing
-│   ├── categories-index.njk # Dedicated Categories Index page with search
-│   ├── categories.njk   # Individual category pages
+│   ├── all-recipes.njk  # Flat index of all recipes
+│   ├── categories-index.njk # /categories/ live filter page
+│   ├── categories.njk   # Individual paginated category pages
 │   ├── recipe.njk       # Recipe detail pages with breadcrumbs
-│   ├── layouts/
-│   │   └── base.njk     # Base layout with header, footer, breadcrumbs
 │   ├── styles.css       # Site styling
-│   ├── search.js        # Client-side live filtering for categories
-│   └── _data/
+│   ├── search.js        # Client-side live filtering
+│   ├── images/          # Uploaded recipe photos
+│   └── _data/           # Site data loaders
 │       ├── categories.js
 │       └── recipes.js
 ├── .eleventy.js         # Eleventy configuration
 ├── package.json         # Project metadata and build scripts
-├── add_recipe.py        # Python CLI for adding recipes
-└── dist/                # (Generated) Final site output
+├── add_recipe.py        # CLI recipe creation tool
+├── recipe_editor.py     # Local web-based recipe editor (never deployed)
+├── dist/                # (Generated) Final site output
 ```
 
 ---
@@ -100,33 +124,29 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 ✅ Recipe detail pages with unique permalinks and breadcrumbs  
 ✅ Improved CSS design and theming  
 ✅ Search/filtering on the Categories Index page  
-✅ Dedicated Categories Index Page (/categories/) with live filtering  
+✅ Dedicated Categories Index Page (`/categories/`) with live filtering  
 ✅ Updated header navigation (Home | Recipes)  
 ✅ Breadcrumbs show "Home / Recipes / Category / Recipe"  
 ✅ Print-friendly styling  
-✅ All-recipes index page
+✅ Recipe image support (stored locally in `src/images/`)  
+✅ All-recipes index page (`/recipes/`)  
+✅ Local-only recipe editor with web form and image upload  
 
 ⬜️ Deployment setup (GitHub Pages / Netlify)  
-⬜️ Recipe image support  
 ⬜️ Advanced recipe search (ingredients, title)  
 ⬜️ Tags or labels for recipes  
-⬜️ Pagination for large lists  
-⭐ Break long category pages into multiple pages  
-⭐ Improve usability for mobile and large collections  
-⬜️ Mobile navigation improvements
-⬜️ Local-only recipe management tools  
-⭐ Command-line and/or local web form for adding/updating JSON recipes  
-⭐ Ensures editor never deployed to public static site
+⬜️ Pagination for large category lists  
+⬜️ Mobile navigation improvements  
+⬜️ Optional delete recipe tool in editor
 
 
 ---
 
 ## 📌 Notes
 
-- `content/` is the single source of truth for all recipes.
-- `dist/` is generated output—**do not commit** to version control.
-- All customization lives in `src/`.
-- Easily extendable for new features.
+- `recipe_editor.py` is **never published**
+- `.gitignore` and build process **exclude local data tools**
+- Designed for local use only to protect family content
 
 ---
 
