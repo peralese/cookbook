@@ -88,28 +88,35 @@ Generates a new `.json` recipe file in the correct `content/` subfolder.
 ## 📂 Project Structure
 
 ``
+## 📂 Project Structure
+
+```
 /
-├── content/             # All recipe JSON files, organized by category
+├── content/                    # All recipe JSON files, organized by category
 │   ├── 01 - Breakfast/
 │   ├── 02 - Baking/
 │   └── ...
-├── src/                 # Eleventy templates and layouts
-│   ├── index.njk        # Home page - welcome / landing
-│   ├── all-recipes.njk  # Flat index of all recipes
-│   ├── categories-index.njk # /categories/ live filter page
-│   ├── categories.njk   # Individual paginated category pages
-│   ├── recipe.njk       # Recipe detail pages with breadcrumbs
-│   ├── styles.css       # Site styling
-│   ├── search.js        # Client-side live filtering
-│   ├── images/          # Uploaded recipe photos
-│   └── _data/           # Site data loaders
-│       ├── categories.js
-│       └── recipes.js
-├── .eleventy.js         # Eleventy configuration
-├── package.json         # Project metadata and build scripts
-├── add_recipe.py        # CLI recipe creation tool
-├── recipe_editor.py     # Local web-based recipe editor (never deployed)
-├── dist/                # (Generated) Final site output
+├── src/                        # Eleventy templates, assets, and data
+│   ├── all-recipes.njk         # Full recipe listing (no pagination)
+│   ├── base.njk                # Shared layout (header, footer, breadcrumbs)
+│   ├── categories-index.njk    # Categories page with live filtering
+│   ├── categories.njk          # Fallback category page (legacy)
+│   ├── category-pages.njk      # Paginated category pages
+│   ├── index.njk               # Home page (welcome)
+│   ├── recipe.njk              # Recipe detail pages
+│   ├── styles.css              # All site styling and print formatting
+│   ├── search.js               # Client-side live category filter
+│   ├── images/                 # Recipe photos (uploaded locally)
+│   └── _data/                  # Global data loaders
+│       ├── categories.js       # Category list generator
+│       ├── recipes.js          # All recipes loader
+│       └── categoryMap.js      # Category-to-recipe map (optional)
+├── .eleventy.js                # Eleventy config file (pagination, filters)
+├── add_recipe.py               # CLI tool to create new recipes
+├── recipe_editor.py            # Web form tool to create/edit recipes (local only)
+├── package.json                # Build scripts and dependencies
+├── dist/                       # Final generated site (do not edit)
+└── .gitignore                  # Excludes dist/, images, and local tools from deploy
 ```
 
 ---
