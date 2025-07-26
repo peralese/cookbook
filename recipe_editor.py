@@ -7,6 +7,7 @@ import os
 import json
 from pathlib import Path
 import shutil
+from utils import cleanup_old_recipe_file
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'src/images'
@@ -65,9 +66,29 @@ def submit():
         image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
         data["image"] = image_filename
 
+    # out_file = Path("content") / category / f"{filename}.json"
+    # with open(out_file, "w", encoding="utf-8") as f:
+    #     json.dump(data, f, indent=2, ensure_ascii=False)
+
+    # if cleanup_old_recipe_file(old_path, new_path):
+    #   flash("Old recipe file cleaned up.")
+    # Determine final output path
+    # filename = data["filename"]
+    category = data["category"]
     out_file = Path("content") / category / f"{filename}.json"
+
+    # Handle editing (with possible filename change)
+    if request.form.get("recipe"):
+        old_filename = request.form["recipe"]
+        if old_filename != filename:
+            old_path = Path("content") / category / f"{old_filename}.json"
+            if cleanup_old_recipe_file(old_path, out_file):
+                print(f"✅ Removed old file: {old_path}")
+
+    # Save updated recipe
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
 
     return redirect(f"/?category={category}&recipe={filename}")
 
@@ -108,10 +129,11 @@ FORM_TEMPLATE = """
   <textarea name="remarks" rows="3" cols="60">{{ recipe_data.remarks or '' }}</textarea><br><br>
 
   <label>Yield:</label><br>
-  <input name="yield" value="{{ recipe_data.yield or '' }}"><br><br>
+  <textarea name="yield" rows="3" cols="60">{{ recipe_data.get('yield', '') }}</textarea><br><br>
 
   <label>Source:</label><br>
-  <input name="source" value="{{ recipe_data.source or '' }}"><br><br>
+  <textarea name="source" rows="3" cols="60">{{ recipe_data.get('source', '') }}</textarea><br><br>
+
 
   <label>Upload Image:</label><br>
   <input type="file" name="image"><br><br>
