@@ -59,6 +59,19 @@ def submit():
         "yield": request.form.get("yield", ""),
         "source": request.form.get("source", "")
     }
+# Handle optional tags (comma-separated)
+    tags_raw = request.form.get('tags', '').strip()
+    if tags_raw:
+        if isinstance(tags_raw, str):
+            tags = [tag.strip() for tag in tags_raw.split(',') if tag.strip()]
+        elif isinstance(tags_raw, list):
+            tags = [tag.strip() for tag in tags_raw if tag.strip()]
+        else:
+            tags = []
+    else:
+        tags = []
+
+    data["tags"] = tags
 
     image = request.files.get("image")
     if image and image.filename:
@@ -66,14 +79,6 @@ def submit():
         image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
         data["image"] = image_filename
 
-    # out_file = Path("content") / category / f"{filename}.json"
-    # with open(out_file, "w", encoding="utf-8") as f:
-    #     json.dump(data, f, indent=2, ensure_ascii=False)
-
-    # if cleanup_old_recipe_file(old_path, new_path):
-    #   flash("Old recipe file cleaned up.")
-    # Determine final output path
-    # filename = data["filename"]
     category = data["category"]
     out_file = Path("content") / category / f"{filename}.json"
 
@@ -134,6 +139,8 @@ FORM_TEMPLATE = """
   <label>Source:</label><br>
   <textarea name="source" rows="3" cols="60">{{ recipe_data.get('source', '') }}</textarea><br><br>
 
+  <label for="tags">Tags (comma-separated):</label><br>
+  <input type="text" name="tags" id="tags" value="{{ recipe_data.get('tags', []) | join(', ') }}"><br><br>
 
   <label>Upload Image:</label><br>
   <input type="file" name="image"><br><br>

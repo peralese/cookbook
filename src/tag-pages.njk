@@ -1,0 +1,15 @@
+---
+pagination:
+  data: tags
+  size: 1
+  alias: tag
+  addAllPagesToCollections: true
+permalink: "/tags/{{ tag | slug }}/index.html"
+layout: base.njk
+---
+
+<h1>{{ tag }} Recipes</h1>
+
+<ul>
+  <li><a href="/recipes/{{ recipe.category | slug }}/{{ recipe.filename | slug }}/">{{ recipe.title }}</a></li>
+</ul>

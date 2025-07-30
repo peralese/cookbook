@@ -13,18 +13,22 @@ This project is a private family cookbook website built using [Eleventy (11ty)](
 ✅ Improved CSS design and theming with responsive layout  
 ✅ Search/filtering on the Categories Index page  
 ✅ Dedicated `/categories/` index page with live filtering  
-✅ Updated header navigation: Home | Recipes  
+✅ Updated header navigation: Home | Recipes | Tags  
 ✅ Breadcrumbs show "Home / Recipes / Category / Recipe"  
 ✅ Recipe image support  
 ✅ Print-friendly styling  
 ✅ All-recipes index page at `/recipes/`  
+✅ Tag support with dedicated tag listing pages (`/tags/`)  
 ✅ Local-only recipe management web tool (`recipe_editor.py`)  
   • Add new recipes via form  
   • Upload image and auto-copy to `src/images/`  
   • Edit existing recipes with category-aware selection  
   • Automatically deletes old recipe JSON files on updates  
+  • Tag entry supported as comma-separated input (stored as array)  
+  • Handles tags with special characters like apostrophes  
+  • Fixed bug rendering tag strings as individual letters  
   • Improved UI: fixed textarea field widths for `Remarks`, `Yield`, `Source`  
-  • Fixed rendering bug where `Source`/`Yield` incorrectly displayed `Remarks`  
+  • Fixed rendering bug where `Source`/`Yield` incorrectly displayed `Remarks`
 
 ---
 
@@ -68,6 +72,20 @@ Launches a local Flask web app at [http://localhost:5000](http://localhost:5000)
 
 ---
 
+## 🏷️ Tagging Recipes
+
+Recipes can include tags in their JSON file like:
+
+```json
+"tags": ["Family", "Mom's", "Holiday"]
+```
+
+- Tags are comma-separated in the web form and stored as arrays.
+- Special characters like apostrophes (`'`) are supported.
+- Tags are listed on recipe pages and linked to `/tags/<slugified_tag>/` pages.
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -81,14 +99,15 @@ Launches a local Flask web app at [http://localhost:5000](http://localhost:5000)
 │   ├── all-recipes.njk       # /recipes/ index
 │   ├── categories.njk        # Paginated category pages
 │   ├── categories-index.njk  # /categories/ filtering index
+│   ├── tag-pages.njk         # Individual tag pages
 │   ├── recipe.njk            # Recipe detail pages
-│   ├── category-pages.njk    # Optional nested pagination
 │   ├── styles.css            # Site CSS
 │   ├── search.js             # Category live filtering
 │   ├── images/               # Recipe images
 │   └── _data/
 │       ├── categories.js
 │       ├── recipes.js
+│       ├── tags.js
 │       ├── categoryMap.js
 ├── dist/                     # Output folder (generated)
 ├── .eleventy.js              # Eleventy config
@@ -104,9 +123,9 @@ Launches a local Flask web app at [http://localhost:5000](http://localhost:5000)
 
 ⬜ Deployment setup (e.g. GitHub Pages, Netlify)  
 ⬜ Advanced recipe search (title, ingredients)  
-⬜ Tags or labels for recipes  
 ⬜ Pagination for large category lists  
 ⬜ Mobile navigation enhancements  
+✅ Tags or labels for recipes
 
 ---
 
@@ -129,6 +148,7 @@ Created to preserve and share our family’s favorite recipes—across generatio
 **Erick Perales**  
 IT Architect, Cloud Migration Specialist  
 [https://github.com/peralese](https://github.com/peralese)
+
 
 
 

@@ -7,10 +7,10 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/search.js");
   eleventyConfig.addPassthroughCopy("src/images");
 
-
-  eleventyConfig.addFilter("slug", input =>
-    slugify(input, { lower: true, strict: true })
-  );
+  eleventyConfig.addFilter("slug", input => {
+    if (typeof input !== "string") return "";
+    return slugify(input, { lower: true, strict: true });
+  });
 
   return {
     dir: {
@@ -21,4 +21,5 @@ module.exports = function(eleventyConfig) {
     templateFormats: ["njk", "md", "html"]
   };
 };
+
 

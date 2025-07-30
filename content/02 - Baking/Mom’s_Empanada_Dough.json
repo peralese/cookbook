@@ -1,5 +1,6 @@
 {
   "title": "Mom’s Empanada Dough",
+  "category": "02 - Baking",
   "requires": "",
   "ingredients": [
     "2 Cups unbleached flour",
@@ -17,5 +18,7 @@
   "remarks": "",
   "yield": "",
   "source": "From my Mom (Abigail V. Perales)",
-  "category": "02 - Baking"
+  "tags": [
+    "Mom's"
+  ]
 }

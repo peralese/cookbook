@@ -47,3 +47,11 @@ eleventyComputed:
 {% if recipe.source %}
 <p><strong>Source:</strong> {{ recipe.source }}</p>
 {% endif %}
+
+{% if recipe.tags %}
+  <p><strong>Tags:</strong>
+    {% for tag in recipe.tags %}
+      <span class="tag">{{ tag }}</span>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+{% endif %}

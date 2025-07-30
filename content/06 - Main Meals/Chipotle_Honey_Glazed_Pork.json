@@ -1,5 +1,6 @@
 {
   "title": "Chipotle Honey Glazed Pork",
+  "category": "06 - Main Meals",
   "requires": "",
   "ingredients": [
     "3 canned chipotle chiles in adobo",
@@ -10,13 +11,9 @@
   "instructions": [
     "Preheat the oven to 450° F.",
     "Purée chipotles in adobo with garlic and honey in a blender until it’s smooth.  Pat dry the pork loin with paper towels and season with salt.  Put the pork on a foil-lined baking sheet and spread with the chipotle glaze to coat well. Roast in the middle of the oven until an instant-read thermometer registers 155° F, about 20 minutes.",
-    "Let the pork loin rest on the cutting board before cutting for 5 minutes.  Slice thin and serve.",
-    "Remarks:  You may wish to reduce the number of chipotle chilies if you are concerned about how “spicy-hot” this dish is.",
-    "Yield:  Serves 4 to 6, depending on portions.",
-    "Source:  The Best of Gourmet 2000, from the Editors of Gourmet, ©1999 by The Condé Nast Publications, Published by Random House Inc., New York."
+    "Let the pork loin rest on the cutting board before cutting for 5 minutes.  Slice thin and serve. "
   ],
-  "remarks": "",
-  "yield": "",
-  "source": "",
-  "category": "06 - Main Meals"
+  "remarks": "You may wish to reduce the number of chipotle chilies if you are concerned about how “spicy-hot” this dish is.",
+  "yield": "Serves 4 to 6, depending on portions.",
+  "source": "The Best of Gourmet 2000, from the Editors of Gourmet, ©1999 by The Condé Nast Publications, Published by Random House Inc., New York."
 }
