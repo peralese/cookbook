@@ -1,15 +1,27 @@
 ---
 pagination:
-  data: tags
+  data: collections.tagged
   size: 1
-  alias: tag
+  alias: tagName
   addAllPagesToCollections: true
-permalink: "/tags/{{ tag | slug }}/index.html"
+permalink: "/tags/{{ tagName | slug }}/"
 layout: base.njk
 ---
 
-<h1>{{ tag }} Recipes</h1>
+<h1>Recipes tagged: {{ tagName }}</h1>
 
-<ul>
-  <li><a href="/recipes/{{ recipe.category | slug }}/{{ recipe.filename | slug }}/">{{ recipe.title }}</a></li>
-</ul>
+{% for recipe in collections.tagged[tagName] %}
+  <div class="recipe-card">
+    <h2><a href="{{ recipe.url }}">{{ recipe.title }}</a></h2>
+    {% if recipe.image %}
+      <img src="/images/{{ recipe.image }}" alt="{{ recipe.title }}" style="max-width: 200px;">
+    {% endif %}
+    <p>{{ recipe.description }}</p>
+  </div>
+{% else %}
+  <p>No recipes found for this tag.</p>
+{% endfor %}
+
+
+
+
