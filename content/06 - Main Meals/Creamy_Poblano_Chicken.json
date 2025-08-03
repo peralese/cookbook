@@ -1,5 +1,6 @@
 {
   "title": "Creamy Poblano Chicken",
+  "category": "06 - Main Meals",
   "requires": "",
   "ingredients": [
     "3 tablespoons butter or margarine",
@@ -30,12 +31,10 @@
     "Source:  New Ways with Cornbread by Andria S. Hurst, Southern Living, February 1998.",
     "Cornbread Waffles",
     "Stir together the first five ingredients (the cornmeal, flour, baking powder, sugar and salt) in a large bowl.  Stir together the next three ingredients (egg, milk and melted butter) and then add the mixture to the cornmeal mixture.  Stir just until the dry ingredients are moistened.",
-    "Cook in a preheated, oiled waffle iron until just crisp.",
-    "Yield:  12 (four inch) waffles.",
-    "Source:  New Ways with Cornbread by Andria S. Hurst, Southern Living, February 1998."
+    "Cook in a preheated, oiled waffle iron until just crisp."
   ],
   "remarks": "",
-  "yield": "",
-  "source": "",
-  "category": "06 - Main Meals"
+  "yield": "12 (four inch) waffles.",
+  "source": "New Ways with Cornbread by Andria S. Hurst, Southern Living, February 1998.",
+  "tags": []
 }

@@ -1,5 +1,6 @@
 {
   "title": "Croque Monsieur",
+  "category": "06 - Main Meals",
   "requires": "",
   "ingredients": [
     "4 oz - Gruyere",
@@ -23,11 +24,10 @@
     "Transfer 4 slices, sauce side up, to a parchment-lined rimmed baking sheet. Divide 8 oz. sliced ham among slices on sheet, then top with half of reserved Gruyère.",
     "Top with remaining slices of bread sauce side up. Sprinkle remaining cheese over each.",
     "Bake sandwiches until cheese and sauce are lightly browned and bubbling, 10–15 minutes.",
-    "Slice sandwiches crosswise on a diagonal. Serve with cornichons and extra Dijon mustard for dipping alongside.",
-    "Source:  Bon Appetit (https://www.bonappetit.com/recipe/basically-croque-monsieur)"
+    "Slice sandwiches crosswise on a diagonal. Serve with cornichons and extra Dijon mustard for dipping alongside."
   ],
   "remarks": "",
   "yield": "",
-  "source": "",
-  "category": "06 - Main Meals"
+  "source": "Bon Appetit (https://www.bonappetit.com/recipe/basically-croque-monsieur)",
+  "tags": []
 }
