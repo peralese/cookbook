@@ -12,7 +12,7 @@ layout: base.njk
 
 {% for recipe in collections.tagged[tagName] %}
   <div class="recipe-card">
-    <h2><a href="{{ recipe.url }}">{{ recipe.title }}</a></h2>
+    <a href="/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/">{{ recipe.title }}</a>
     {% if recipe.image %}
       <img src="/images/{{ recipe.image }}" alt="{{ recipe.title }}" style="max-width: 200px;">
     {% endif %}

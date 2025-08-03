@@ -1,22 +1,39 @@
 ---
 layout: base.njk
 title: All Recipes
-permalink: /recipes/index.html
+pagination:
+  data: recipes
+  size: 20
+  alias: pagedRecipes
+  addAllPagesToCollections: true
+permalink: "/recipes/page/{{ pagination.pageNumber + 1 }}/"
 ---
 
 <h1>All Recipes</h1>
 
-<p>Browse all family recipes at once:</p>
-
-<ul>
-  {% for recipe in recipes %}
+<ul class="recipe-list">
+  {% for recipe in pagedRecipes %}
     <li>
-      <a href="/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/">
-        {{ recipe.title }}
-      </a>
-      <em>({{ recipe.category }})</em>
+    <a href="/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/">{{ recipe.title }}</a>
+    <em> ({{ recipe.category }})</em>
     </li>
   {% endfor %}
 </ul>
+
+{% if pagination.pages.length > 1 %}
+  <nav class="pagination">
+    {% if pagination.href.previous %}
+      <a href="{{ pagination.href.previous }}">&laquo; Previous</a>
+    {% endif %}
+
+    Page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}
+
+    {% if pagination.href.next %}
+      <a href="{{ pagination.href.next }}">Next &raquo;</a>
+    {% endif %}
+  </nav>
+{% endif %}
+
+
 
 

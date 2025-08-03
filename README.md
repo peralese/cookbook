@@ -7,28 +7,23 @@ This project is a private family cookbook website built using [Eleventy (11ty)](
 ## ✅ Features Implemented
 
 ✅ Basic site structure with Home, Categories, Recipes  
-✅ Command-line recipe add tool (`add_recipe.py`)  
+✅ Paginated All Recipes list (`/recipes/page/1/`), linked from `/recipes/`  
 ✅ Category pages with dynamic breadcrumbs  
 ✅ Recipe detail pages with unique permalinks and breadcrumbs  
-✅ Improved CSS design and theming with responsive layout  
-✅ Search/filtering on the Categories Index page  
-✅ Dedicated `/categories/` index page with live filtering  
-✅ Updated header navigation: Home | Recipes | Tags  
-✅ Breadcrumbs show "Home / Recipes / Category / Recipe"  
-✅ Recipe image support  
-✅ Print-friendly styling  
-✅ All-recipes index page at `/recipes/`  
-✅ Tag support with dedicated tag listing pages (`/tags/`)  
-✅ Local-only recipe management web tool (`recipe_editor.py`)  
-  • Add new recipes via form  
-  • Upload image and auto-copy to `src/images/`  
-  • Edit existing recipes with category-aware selection  
-  • Automatically deletes old recipe JSON files on updates  
-  • Tag entry supported as comma-separated input (stored as array)  
-  • Handles tags with special characters like apostrophes  
-  • Fixed bug rendering tag strings as individual letters  
-  • Improved UI: fixed textarea field widths for `Remarks`, `Yield`, `Source`  
-  • Fixed rendering bug where `Source`/`Yield` incorrectly displayed `Remarks`
+✅ Command-line recipe add tool (`add_recipe.py`)  
+✅ Category-aware Flask-based recipe editor (`recipe_editor.py`)  
+✅ Tag support with slug-safe linking (`/tags/<slug>/`)  
+✅ Tag listing pages and per-tag recipe lists  
+✅ Recipe detail layout with source, tags, category links, print-friendly format  
+✅ Backlinks from recipe pages to All Recipes  
+✅ Navigation: Home | Recipes | Categories | Tags  
+✅ Consistent link behavior across tag and recipe pages  
+✅ Web-safe, slugified URLs for all recipe links  
+✅ Custom Eleventy collections to support tag filtering  
+✅ Live search/filtering for the Categories Index  
+✅ Optional image support for each recipe  
+✅ Auto-generated JSON-based page routing  
+✅ Local image upload and auto-organized storage
 
 ---
 
@@ -37,7 +32,6 @@ This project is a private family cookbook website built using [Eleventy (11ty)](
 ### 1️⃣ Install Node dependencies
 ```bash
 npm install
-```
 
 ---
 
@@ -96,11 +90,15 @@ Recipes can include tags in their JSON file like:
 │   └── ...
 ├── src/
 │   ├── index.njk             # Home
-│   ├── all-recipes.njk       # /recipes/ index
+│   ├── all-recipes.njk       # Paginated all recipes page
+│   ├── recipes.njk           # Redirect /recipes/ → /recipes/page/1/
 │   ├── categories.njk        # Paginated category pages
 │   ├── categories-index.njk  # /categories/ filtering index
 │   ├── tag-pages.njk         # Individual tag pages
-│   ├── recipe.njk            # Recipe detail pages
+│   ├── recipe-pages.njk      # Builds pages per recipe
+│   ├── layouts/
+│   │   ├── base.njk
+│   │   └── recipe.njk        # Layout for recipe detail pages
 │   ├── styles.css            # Site CSS
 │   ├── search.js             # Category live filtering
 │   ├── images/               # Recipe images
@@ -115,17 +113,20 @@ Recipes can include tags in their JSON file like:
 ├── recipe_editor.py          # Flask-based local recipe editor
 ├── package.json              # Build config
 └── README.md
-```
 
 ---
 
 ## 🚧 Roadmap
 
-⬜ Deployment setup (e.g. GitHub Pages, Netlify)  
-⬜ Advanced recipe search (title, ingredients)  
-⬜ Pagination for large category lists  
-⬜ Mobile navigation enhancements  
-✅ Tags or labels for recipes
+⬜ Deployment (e.g., GitHub Pages or Netlify)
+⬜ Print layout improvements
+⬜ Advanced Search capabilities
+⬜ Mobile navigation enhancements
+⬜ Pagination for all Categories
+✅ Pagination for All Recipes
+✅ Tags, tag linking, tag display pages
+✅ Category-structured recipe storage
+✅ Local recipe image upload & cleanup
 
 ---
 

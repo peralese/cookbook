@@ -1,57 +1,10 @@
 ---
-pagination:
-  data: recipes
-  size: 1
-  alias: recipe
-permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/index.html"
-layout: base.njk
-eleventyComputed:
-   breadcrumbs: "<a href='/'>Home</a> / <a href='/categories/'>Recipes</a> / <a href='/categories/{{ recipe.slugCategory }}/'>{{ recipe.category }}</a> / {{ recipe.title }}"
+permalink: /recipes/index.html
 ---
 
-<h1>{{ recipe.title }}</h1>
-
-{% if recipe.requires %}
-<p><strong>Requires:</strong> {{ recipe.requires }}</p>
-{% endif %}
-
-{% if recipe.image %}
-  <div class="recipe-image">
-    <img src="/images/{{ recipe.image }}" alt="Photo of {{ recipe.title }}">
-  </div>
-{% endif %}
-
-
-<h2>Ingredients</h2>
-<ul>
-  {% for item in recipe.ingredients %}
-    <li>{{ item }}</li>
-  {% endfor %}
-</ul>
-
-<h2>Instructions</h2>
-<ol>
-  {% for step in recipe.instructions %}
-    <li>{{ step }}</li>
-  {% endfor %}
-</ol>
-
-{% if recipe.remarks %}
-<p><strong>Remarks:</strong> {{ recipe.remarks }}</p>
-{% endif %}
-
-{% if recipe.yield %}
-<p><strong>Yield:</strong> {{ recipe.yield }}</p>
-{% endif %}
-
-{% if recipe.source %}
-<p><strong>Source:</strong> {{ recipe.source }}</p>
-{% endif %}
-
-{% if recipe.tags %}
-  <p><strong>Tags:</strong>
-    {% for tag in recipe.tags %}
-      <span class="tag">{{ tag }}</span>{% if not loop.last %}, {% endif %}
-    {% endfor %}
-  </p>
-{% endif %}
+<script>
+  window.location.href = "/recipes/page/1/";
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="0; url=/recipes/page/1/">
+</noscript>
