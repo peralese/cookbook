@@ -8,9 +8,11 @@ permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.filename }}/"
 layout: base.njk
 ---
 
-
-<article class="recipe-page">
-  <p><a href="/recipes/page/1/" class="back-link">&laquo; Back to All Recipes</a></p>
+<article class="recipe-page" data-title="{{ recipe.title }}">
+  <p class="print-hint">
+    <button class="print-btn" onclick="window.print()">🖨 Print Recipe</button>
+    <a href="/recipes/page/1/" class="back-link">&laquo; Back to All Recipes</a>
+  </p>
 
   <h1>{{ recipe.title }}</h1>
 
@@ -49,16 +51,17 @@ layout: base.njk
   {% endif %}
 
   <h2>Ingredients</h2>
-  <ul>
+  <ul class="ingredients">
     {% for item in recipe.ingredients %}
       <li>{{ item }}</li>
     {% endfor %}
   </ul>
 
   <h2>Instructions</h2>
-  <ol>
+  <ol class="instructions">
     {% for step in recipe.instructions %}
       <li>{{ step }}</li>
     {% endfor %}
   </ol>
 </article>
+

@@ -1,0 +1,54 @@
+/* Print-only rules */
+@media print {
+  /* 1) Hide site chrome */
+  header, nav, .site-nav, .breadcrumbs, .search-bar, .pagination, footer, .back-link, .tag-list, .category-list, .filters, .print-hint {
+    display: none !important;
+  }
+
+  /* 2) Readable typography */
+  html, body {
+    font-family: "Times New Roman", Georgia, serif;
+    font-size: 14pt;
+    line-height: 1.35;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  /* 3) Images scale properly */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  /* 4) Avoid ugly page breaks in critical blocks */
+  h1, h2, h3, p, ul, ol, li, table, thead, tbody, tr, td, th, blockquote, pre, code {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 6) Add a print header with the recipe title using data attribute */
+  .recipe-page:before {
+    content: "Recipe: " attr(data-title);
+    display: block;
+    font-weight: 700;
+    font-size: 20pt;
+    margin-bottom: 0.35in;
+  }
+
+  /* Optional: add subtle separators */
+  .ingredients, .instructions {
+    margin-top: 0.3in;
+  }
+
+  /* Remove link underlines/visited colors in print for clarity */
+  a, a:visited {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+}
+
+/* 6, extra polish: control page margins */
+@page {
+  margin: 0.5in 0.6in;
+}

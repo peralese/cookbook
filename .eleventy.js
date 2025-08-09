@@ -20,6 +20,8 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
   eleventyConfig.addPassthroughCopy("src/search.js");
   eleventyConfig.addPassthroughCopy("src/images");
+  eleventyConfig.addPassthroughCopy("src/print.css"); // <-- add this
+
 
   // ✅ Load all recipe JSON files directly
   function loadAllRecipes() {
