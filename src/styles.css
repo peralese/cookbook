@@ -190,3 +190,85 @@ nav.breadcrumbs a:hover {
 .print-btn {
   cursor: pointer;
 }
+/* --- Recipe hero title: make it visible and kill the old pseudo-title --- */
+.recipe-hero { 
+  position: relative;
+  background: #673ab7;
+  color: #fff;
+  text-align: center;
+  padding: 3rem 1rem;
+  border-radius: 12px;
+}
+
+/* If an old CSS rule prints the title via :before/attr(data-title), disable it */
+.recipe-hero::before,
+.recipe-hero::after,
+.recipe-page::before,
+.recipe-page::after {
+  content: none !important;
+}
+
+/* Recipe hero title size — match or exceed the H2 size */
+.recipe-hero .recipe-title {
+  font-size: 2rem;          /* same as a typical H2 */
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff !important;
+}
+
+@media (min-width: 768px) {
+  .recipe-hero .recipe-title {
+    font-size: 2.25rem;     /* slight bump on larger screens */
+  }
+}
+/* Slimmer purple hero */
+.recipe-hero {
+  padding-block: 1.1rem;   /* top & bottom */
+}
+
+@media (min-width: 768px) {
+  .recipe-hero {
+    padding-block: 1.4rem;
+  }
+}
+
+/* Trim extra spacing around title & button */
+.recipe-hero .recipe-title { margin: 0; }
+.recipe-hero .print-btn { margin-top: .5rem; }
+
+/* --- Print fixes for recipe pages --- */
+@media print {
+  /* Show title in black, drop the purple background */
+  .recipe-hero {
+    background: none !important;
+    color: #000 !important;
+    padding-block: 0.25in !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+  .recipe-hero::before,
+  .recipe-hero::after,
+  .recipe-page::before,
+  .recipe-page::after {
+    content: none !important;
+  }
+  .recipe-hero .recipe-title {
+    color: #000 !important;
+    font-size: 18pt !important;   /* tweak to taste */
+    margin: 0 0 8pt !important;
+  }
+
+  /* Hide UI chrome */
+  .site-nav,
+  .breadcrumbs,
+  .print-btn,
+  footer { display: none !important; }
+
+  /* Nice print layout */
+  @page { margin: 0.5in; }
+  .notes { white-space: pre-line; }
+}
+
+
+.print-btn { position: relative; z-index: 1; }
+

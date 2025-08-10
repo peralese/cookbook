@@ -6,52 +6,66 @@ pagination:
 permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.slugFilename }}/"
 layout: base.njk
 eleventyComputed:
-  title: "{{ recipe.title | default('Recipe') }}"
+  # Page <title> (browser tab)
+  title: "{{ (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) }}"
 ---
 
-<nav class="breadcrumbs">
-  <a href="{{ '/' | url }}">Home</a> /
-  <a href="{{ '/categories/' | url }}">Categories</a> /
-  <a href="{{ '/categories/' | url }}{{ recipe.slugCategory }}/">{{ recipe.category }}</a>
-</nav>
+{# Compute a display title once, reuse everywhere #}
+{% set displayTitle = (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) %}
 
-<article class="recipe">
-  <header>
-    <h1>{{ recipe.title }}</h1>
-    {% if recipe.source %}
-      <p class="source">Source: {{ recipe.source }}</p>
-    {% endif %}
-    <button id="print" onclick="window.print()">🖨️ Print</button>
+<article class="recipe-page">
+  <header class="recipe-hero">
+    <h1 class="recipe-title">{{ displayTitle }}</h1>
+    <button class="print-btn" onclick="window.print()">🖨 Print</button>
   </header>
+  
+  {# ---- ORDER: Ingredients, Instructions, Remarks, Yield, Source, Image, Tags ---- #}
 
-  {% if recipe.description %}
-    <p class="description">{{ recipe.description }}</p>
-  {% endif %}
-
-  {% if recipe.ingredients %}
+  {% if recipe.ingredients and recipe.ingredients.length %}
     <h2>Ingredients</h2>
-    <ul>
+    <ul class="ingredients">
       {% for item in recipe.ingredients %}
         <li>{{ item }}</li>
       {% endfor %}
     </ul>
   {% endif %}
 
-  {% if recipe.instructions %}
+  {% if recipe.instructions and recipe.instructions.length %}
     <h2>Instructions</h2>
-    <ol>
+    <ol class="instructions">
       {% for step in recipe.instructions %}
         <li>{{ step }}</li>
       {% endfor %}
     </ol>
   {% endif %}
 
+  {% if recipe.remarks %}
+    <h2>Remarks</h2>
+    <p class="notes">{{ recipe.remarks }}</p>
+  {% endif %}
+
+  {% if recipe.yield %}
+    <h2>Yield</h2>
+    <p class="yield">{{ recipe.yield }}</p>
+  {% endif %}
+
+  {% if recipe.source %}
+    <h2>Source</h2>
+    <p class="source">{{ recipe.source }}</p>
+  {% endif %}
+
+  {% if recipe.image %}
+    <h2>Image</h2>
+    <img src="{{ recipe.image | url }}" alt="{{ displayTitle }}" loading="lazy">
+  {% endif %}
+
   {% if recipe.tags and recipe.tags.length %}
-    <p class="tags">
-      <strong>Tags:</strong>
+    <h2>Tags</h2>
+    <ul class="tags">
       {% for t in recipe.tags %}
-        <a href="{{ '/tags/' | url }}#{{ t | slug }}">{{ t }}</a>{% if not loop.last %}, {% endif %}
+        <li><a href="{{ '/tags/' | url }}#{{ t | slug }}">{{ t }}</a></li>
       {% endfor %}
-    </p>
+    </ul>
   {% endif %}
 </article>
+

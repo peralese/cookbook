@@ -52,3 +52,32 @@
 @page {
   margin: 0.5in 0.6in;
 }
+
+/* --- Ensure recipe title prints --- */
+@media print {
+  header.recipe-hero {
+    display: block !important;      /* override any header{display:none} */
+    background: none !important;    /* drop purple bg in print */
+    color: #000 !important;
+    padding-block: 0.25in !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    break-after: avoid;
+  }
+  header.recipe-hero::before,
+  header.recipe-hero::after,
+  .recipe-page::before,
+  .recipe-page::after {
+    content: none !important;
+  }
+  header.recipe-hero .recipe-title {
+    display: block !important;
+    color: #000 !important;
+    font-size: 18pt !important;     /* tweak to taste */
+    margin: 0 0 8pt !important;
+  }
+
+  /* Keep site chrome hidden */
+  .site-nav, .breadcrumbs, .print-btn, footer { display: none !important; }
+  @page { margin: 0.5in; }
+}
