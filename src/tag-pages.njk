@@ -12,7 +12,7 @@ layout: base.njk
 
 {% for recipe in collections.tagged[tagName] %}
   <div class="recipe-card">
-    <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.filename | slug) + '/') | url }}">
+    <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.slugFilename or (recipe.filename | slug)) + '/') | url }}">
       {{ recipe.title }}
     </a>
     {% if recipe.image %}
@@ -22,6 +22,7 @@ layout: base.njk
       <p>{{ recipe.description }}</p>
     {% endif %}
   </div>
+
 {% else %}
   <p>No recipes found for this tag.</p>
 {% endfor %}

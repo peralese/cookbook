@@ -14,11 +14,11 @@ eleventyComputed:
 <ul>
   {% for recipe in recipes %}
     {% if recipe.category == category %}
-      <li>
-        <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.filename | slug) + '/') | url }}">
-          {{ recipe.title }}
-        </a>
-      </li>
+    <li>
+      <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.slugFilename or (recipe.filename | slug)) + '/') | url }}">
+        {{ recipe.title }}
+      </a>
+    </li>
     {% endif %}
   {% endfor %}
 </ul>
