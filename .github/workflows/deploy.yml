@@ -60,6 +60,17 @@ jobs:
       - name: Show first 200 files in dist
         run: |
           find dist -type f | head -200
+      
+      - name: List recipes tree (2 levels)
+        run: |
+          echo "Top of dist/recipes:"
+          ls -la dist/recipes || true
+          echo "Two levels under dist/recipes:"
+          find dist/recipes -maxdepth 2 -type d -print
+          echo "Sample files under dist/recipes (first 200):"
+          find dist/recipes -type f | head -200
+
+          
       # ---------- END DEBUG ----------
 
       - name: Upload artifact
