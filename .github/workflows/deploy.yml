@@ -56,11 +56,7 @@ jobs:
           test -f dist/recipes/01-breakfast/baking-powder-biscuits/index.html && \
             echo "✅ Found sample recipe page" || \
             (echo "❌ Missing dist/recipes/* pages (build problem)"; exit 1)
-
-      - name: Show first 200 files in dist
-        run: |
-          find dist -type f | head -200
-      
+        
       - name: List recipes tree (2 levels)
         run: |
           echo "Top of dist/recipes:"
@@ -69,6 +65,10 @@ jobs:
           find dist/recipes -maxdepth 2 -type d -print
           echo "Sample files under dist/recipes (first 200):"
           find dist/recipes -type f | head -200
+
+      - name: Show first 200 files in dist
+        run: |
+          find dist -type f | head -200
 
           
       # ---------- END DEBUG ----------
