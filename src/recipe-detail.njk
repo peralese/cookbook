@@ -8,6 +8,7 @@ layout: base.njk
 eleventyComputed:
   # Page <title> (browser tab)
   title: "{{ (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) }}"
+  tags: "{{ recipe.tags }}"
 ---
 
 {# Compute a display title once, reuse everywhere #}
