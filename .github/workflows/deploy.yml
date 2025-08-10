@@ -1,4 +1,4 @@
-name: Deploy 11ty to GitHub Pages
+name: Deploy Eleventy to GitHub Pages
 
 on:
   push:
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # 👇 IMPORTANT: set this to your repo name with leading/trailing slashes
+  # IMPORTANT: set to your repo name with leading/trailing slashes
   PATH_PREFIX: /cookbook/
 
 jobs:
@@ -34,10 +34,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Show versions
+        run: |
+          node -v
+          npm -v
+          npx eleventy --version || true
+
       - name: Build site (Eleventy)
         run: npm run build
         env:
           PATH_PREFIX: ${{ env.PATH_PREFIX }}
+
+      # ---------- DEBUG / SANITY CHECKS ----------
+      - name: Inspect build output
+        run: |
+          echo "File count in dist:"
+          find dist -type f | wc -l
+          echo "Tree (top-level of dist):"
+          ls -la dist || true
+          echo "Check a sample recipe page exists:"
+          test -f dist/recipes/01-breakfast/baking-powder-biscuits/index.html && \
+            echo "✅ Found sample recipe page" || \
+            (echo "❌ Missing dist/recipes/* pages (build problem)"; exit 1)
+
+      - name: Show first 200 files in dist
+        run: |
+          find dist -type f | head -200
+      # ---------- END DEBUG ----------
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -53,3 +76,4 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
