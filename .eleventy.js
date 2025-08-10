@@ -72,7 +72,7 @@ module.exports = function(eleventyConfig) {
       input: "src",
       output: "dist",
       includes: "layouts"
-      data: "_data",
+      data: "_data"
     },
     templateFormats: ["njk", "md", "html"], // ← missing comma fixed
     pathPrefix: process.env.PATH_PREFIX || "/cookbook/", // repo name with slashes
