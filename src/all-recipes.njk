@@ -14,7 +14,7 @@ permalink: "/recipes/page/{{ pagination.pageNumber + 1 }}/"
 <ul class="recipe-list">
   {% for recipe in pagedRecipes %}
     <li>
-      <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.filename | slug) + '/') | url }}">{{ recipe.title }}</a>
+      <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + recipe.slugFilename + '/') | url }}">{{ recipe.title }}</a>
       <em> ({{ recipe.category }})</em>
     </li>
   {% endfor %}

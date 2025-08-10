@@ -4,7 +4,7 @@ pagination:
   size: 1
   alias: recipe
   addAllPagesToCollections: true
-permalink: "{{ ('/recipes/' + recipe.slugCategory + '/' + recipe.filename + '/') | url }}"
+permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.slugFilename or (recipe.filename | slug) }}/"
 layout: base.njk
 ---
 
