@@ -118,7 +118,6 @@ Recipes can include tags in their JSON file like:
 
 ## 🚧 Roadmap
 
-⬜ Deployment (e.g., GitHub Pages or Netlify)
 ⬜ Advanced Search capabilities
 ⬜ Mobile navigation enhancements
 ⬜ Pagination for all Categories
@@ -127,6 +126,7 @@ Recipes can include tags in their JSON file like:
 ✅ Category-structured recipe storage
 ✅ Local recipe image upload & cleanup
 ✅ Print layout improvements
+✅ Deployment to GitHub Pages
 
 ---
 

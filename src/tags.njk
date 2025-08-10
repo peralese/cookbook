@@ -1,21 +1,20 @@
 ---
-pagination:
-  data: collections
-  size: 1
-  alias: tagCollection
-  filter: tag => tag !== "all"
-  addAllPagesToCollections: true
-permalink: "/tags/{{ pagination.items[0] | slug }}/"
 layout: base.njk
+title: Tags
+permalink: "/tags/index.html"
 ---
 
-<h1>Recipes tagged: {{ pagination.items[0] }}</h1>
+<h1>Tags</h1>
 
-{% for recipe in tagCollection[pagination.items[0]] %}
-  <div>
-    <h2><a href="{{ recipe.url }}">{{ recipe.title }}</a></h2>
-    {% if recipe.image %}
-      <img src="/images/{{ recipe.image }}" alt="{{ recipe.title }}" style="max-width: 200px;">
-    {% endif %}
-  </div>
-{% endfor %}
+<ul>
+  {# collections.tagged is your custom map: { "Mom's": [recipes...], ... } #}
+  {% for tag in collections.tagged | keys | sort %}
+    <li>
+      <a href="{{ ('/tags/' + (tag | slug) + '/') | url }}">
+        {{ tag }}
+      </a>
+      ({{ collections.tagged[tag].length }})
+    </li>
+  {% endfor %}
+</ul>
+

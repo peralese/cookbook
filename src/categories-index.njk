@@ -1,8 +1,8 @@
 ---
 layout: base.njk
 title: Recipes
-permalink: /categories/index.html
-breadcrumbs: "<a href='/'>Home</a> / Recipes"
+permalink: "/categories/index.html"
+breadcrumbs: "<a href='{{ '/' | url }}'>Home</a> / Recipes"
 ---
 
 <h1>Recipes</h1>
@@ -15,7 +15,8 @@ breadcrumbs: "<a href='/'>Home</a> / Recipes"
 
 <ul id="categoriesList">
   {% for category in categories %}
-    <li><a href="/categories/{{ category | slug }}/">{{ category }}</a></li>
+    <li>
+      <a href="{{ ('/categories/' + (category | slug) + '/') | url }}">{{ category }}</a>
+    </li>
   {% endfor %}
 </ul>
-

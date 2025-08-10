@@ -2,32 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="stylesheet" href="/print.css" media="print">
+  <link rel="stylesheet" href="{{ '/styles.css' | url }}">
+  <link rel="stylesheet" href="{{ '/print.css' | url }}" media="print">
+  {# Load once, defer so it runs after DOM is parsed #}
+  <script src="{{ '/search.js' | url }}" defer></script>
 </head>
 <body>
 <header>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/categories/">Recipes</a>
-    <a href="/recipes/">All Recipes</a>
-    <a href="/tags/">Tags</a>
+  <nav class="site-nav">
+    <a href="{{ '/' | url }}">Home</a>
+    <a href="{{ '/recipes/page/1/' | url }}">Recipes</a>
+    <a href="{{ '/categories/' | url }}">Categories</a>
+    <a href="{{ '/tags/' | url }}">Tags</a>
   </nav>
 </header>
+
 <div class="container">
   {% if breadcrumbs %}
     <nav class="breadcrumbs">
       {{ breadcrumbs | safe }}
     </nav>
   {% endif %}
-  
+
   {{ content | safe }}
 </div>
-  <footer>
-    <p>&copy; Family Cookbook</p>
-  </footer>
-  <script src="/search.js"></script>
+
+<footer>
+  <p>&copy; Family Cookbook</p>
+</footer>
 </body>
 </html>
+
 

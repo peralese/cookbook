@@ -20,8 +20,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
   eleventyConfig.addPassthroughCopy("src/search.js");
   eleventyConfig.addPassthroughCopy("src/images");
-  eleventyConfig.addPassthroughCopy("src/print.css"); // <-- add this
-
+  eleventyConfig.addPassthroughCopy("src/print.css");
 
   // ✅ Load all recipe JSON files directly
   function loadAllRecipes() {
@@ -74,9 +73,11 @@ module.exports = function(eleventyConfig) {
       output: "dist",
       layouts: "layouts"
     },
-    templateFormats: ["njk", "md", "html"]
+    templateFormats: ["njk", "md", "html"], // ← missing comma fixed
+    pathPrefix: process.env.PATH_PREFIX || "/cookbook/", // repo name with slashes
   };
 };
+
 
 
 

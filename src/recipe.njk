@@ -3,8 +3,9 @@ permalink: /recipes/index.html
 ---
 
 <script>
-  window.location.href = "/recipes/page/1/";
+  window.location.href = "{{ '/recipes/page/1/' | url }}";
 </script>
 <noscript>
-  <meta http-equiv="refresh" content="0; url=/recipes/page/1/">
+  <meta http-equiv="refresh" content="0; url={{ '/recipes/page/1/' | url }}">
 </noscript>
+

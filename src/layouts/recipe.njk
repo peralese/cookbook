@@ -4,32 +4,32 @@ pagination:
   size: 1
   alias: recipe
   addAllPagesToCollections: true
-permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.filename }}/"
+permalink: "{{ ('/recipes/' + recipe.slugCategory + '/' + recipe.filename + '/') | url }}"
 layout: base.njk
 ---
 
 <article class="recipe-page" data-title="{{ recipe.title }}">
   <p class="print-hint">
     <button class="print-btn" onclick="window.print()">🖨 Print Recipe</button>
-    <a href="/recipes/page/1/" class="back-link">&laquo; Back to All Recipes</a>
+    <a href="{{ '/recipes/page/1/' | url }}" class="back-link">&laquo; Back to All Recipes</a>
   </p>
 
   <h1>{{ recipe.title }}</h1>
 
   {% if recipe.image %}
-    <img src="/images/{{ recipe.image }}" alt="{{ recipe.title }}" style="max-width: 400px;">
+    <img src="{{ ('/images/' + recipe.image) | url }}" alt="{{ recipe.title }}" style="max-width: 400px;">
   {% endif %}
 
   {% if recipe.category %}
     <p><strong>Category:</strong>
-      <a href="/categories/{{ recipe.category | slug }}/page/1/">{{ recipe.category }}</a>
+      <a href="{{ ('/categories/' + (recipe.category | slug) + '/page/1/') | url }}">{{ recipe.category }}</a>
     </p>
   {% endif %}
 
   {% if recipe.tags %}
     <p><strong>Tags:</strong>
       {% for tag in recipe.tags %}
-        <a href="/tags/{{ tag | slug }}/">{{ tag }}</a>{% if not loop.last %}, {% endif %}
+        <a href="{{ ('/tags/' + (tag | slug) + '/') | url }}">{{ tag }}</a>{% if not loop.last %}, {% endif %}
       {% endfor %}
     </p>
   {% endif %}

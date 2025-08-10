@@ -6,8 +6,7 @@ pagination:
 permalink: "/categories/{{ category | slug }}/index.html"
 layout: base.njk
 eleventyComputed:
-  breadcrumbs: "<a href='/'>Home</a> / <a href='/categories/'>Recipes</a> / {{ category }}"
-
+  breadcrumbs: "<a href='{{ '/' | url }}'>Home</a> / <a href='{{ '/categories/' | url }}'>Recipes</a> / {{ category }}"
 ---
 
 <h1>{{ category }}</h1>
@@ -16,11 +15,12 @@ eleventyComputed:
   {% for recipe in recipes %}
     {% if recipe.category == category %}
       <li>
-        <a href="/recipes/{{ recipe.slugCategory }}/{{ recipe.filename | slug }}/">
+        <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.filename | slug) + '/') | url }}">
           {{ recipe.title }}
         </a>
       </li>
     {% endif %}
   {% endfor %}
 </ul>
+
 

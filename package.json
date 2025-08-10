@@ -4,16 +4,15 @@
   "description": "",
   "main": ".eleventy.js",
   "scripts": {
-      "build": "eleventy",
-      "serve": "eleventy --serve"
+    "serve": "cross-env PATH_PREFIX=/ eleventy --serve",
+    "build": "cross-env PATH_PREFIX=/cookbook/ eleventy"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@11ty/eleventy": "^3.1.2"
+    "@11ty/eleventy": "^3.1.2",
+    "cross-env": "^7.0.3"
   }
-  
 }
-
