@@ -1,217 +1,71 @@
-// src/_data/recipes.js
-const fs = require("fs");
-const path = require("path");
-const slugify = require("slugify");
+---
+pagination:
+  data: recipes
+  size: 1
+  alias: recipe
+permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.slugFilename }}/"
+layout: base.njk
+eleventyComputed:
+  # Page <title> (browser tab)
+  title: "{{ (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) }}"
+---
 
-const safeSlug = (str) =>
-  slugify(String(str || ""), { lower: true, strict: true });
-const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+{# Compute a display title once, reuse everywhere #}
+{% set displayTitle = (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) %}
 
-const exts = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".JPG", ".PNG", ".JPEG", ".WEBP", ".GIF"];
-const hasExt = (s) => /\.[A-Za-z0-9]{2,5}$/.test(s);
-const isAbsUrl = (v) => typeof v === "string" && /^(?:https?:)?\/\//i.test(v);
-const isSiteAbs = (v) => typeof v === "string" && v.startsWith("/");
+<article class="recipe-page">
+  <header class="recipe-hero">
+    <h1 class="recipe-title">{{ displayTitle }}</h1>
+    <button class="print-btn" onclick="window.print()">🖨 Print</button>
+  </header>
+  
+  {# ---- ORDER: Ingredients, Instructions, Remarks, Yield, Source, Image, Tags ---- #}
 
-// exact: /src/images/<base><ext> and /src/images/<slugCategory>/<base><ext>
-function resolveExact(fsImagesDir, slugCategory, base) {
-  for (const ext of exts) {
-    const flat = path.join(fsImagesDir, `${base}${ext}`);
-    if (fs.existsSync(flat)) return `/images/${base}${ext}`;
-    if (slugCategory) {
-      const inCat = path.join(fsImagesDir, slugCategory, `${base}${ext}`);
-      if (fs.existsSync(inCat)) return `/images/${slugCategory}/${base}${ext}`;
-    }
-  }
-  return undefined;
-}
+  {% if recipe.ingredients and recipe.ingredients.length %}
+    <h2>Ingredients</h2>
+    <ul class="ingredients">
+      {% for item in recipe.ingredients %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-// fuzzy (case/punctuation insensitive) match
-function resolveFuzzy(fsImagesDir, slugCategory, base) {
-  const wanted = norm(base);
-  const dirs = [fsImagesDir, slugCategory ? path.join(fsImagesDir, slugCategory) : null].filter(Boolean);
-  for (const dir of dirs) {
-    let files = [];
-    try { files = fs.readdirSync(dir); } catch { /* ignore */ }
-    for (const f of files) {
-      const ext = path.extname(f);
-      if (!exts.includes(ext)) continue;
-      const nb = norm(path.basename(f, ext));
-      if (nb === wanted) {
-        return dir === fsImagesDir ? `/images/${f}` : `/images/${slugCategory}/${f}`;
-      }
-    }
-  }
-  return undefined;
-}
+  {% if recipe.instructions and recipe.instructions.length %}
+    <h2>Instructions</h2>
+    <ol class="instructions">
+      {% for step in recipe.instructions %}
+        <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+  {% endif %}
 
-const pick = (obj, keys) => {
-  if (!obj || typeof obj !== "object") return undefined;
-  for (const k of keys) {
-    const v = obj[k];
-    if (v !== undefined && v !== null && String(v).trim() !== "") return v;
-  }
-  return undefined;
-};
+  {% if recipe.remarks %}
+    <h2>Remarks</h2>
+    <p class="notes">{{ recipe.remarks }}</p>
+  {% endif %}
 
-const toArray = (val) => {
-  if (Array.isArray(val)) return val.map(String).map((s) => s.trim()).filter(Boolean);
-  if (typeof val === "string") return val.split(/\r?\n|,/).map((s) => s.trim()).filter(Boolean);
-  return [];
-};
+  {% if recipe.yield %}
+    <h2>Yield</h2>
+    <p class="yield">{{ recipe.yield }}</p>
+  {% endif %}
 
-const toSteps = (val) => {
-  const items = toArray(val);
-  return items.map((s) => s.replace(/^\s*(?:\d+[.)\-:]+|[\u2022\u2023\u25E6\-•])\s*/, "")).filter(Boolean);
-};
+  {% if recipe.source %}
+    <h2>Source</h2>
+    <p class="source">{{ recipe.source }}</p>
+  {% endif %}
 
-module.exports = () => {
-  const contentRoot = path.join(__dirname, "..", "..", "content");
-  const fsImagesDir = path.join(__dirname, "..", "images"); // /src/images
+  {% if recipe.image %}
+    <h2>Image</h2>
+    <img src="{{ recipe.image | url }}" alt="{{ displayTitle }}" loading="lazy">
+  {% endif %}
 
-  const categories = fs.readdirSync(contentRoot).filter((item) => {
-    const full = path.join(contentRoot, item);
-    return fs.statSync(full).isDirectory() && !item.startsWith(".") && !item.startsWith("_");
-  });
-
-  const allRecipes = [];
-  let parseErrors = 0;
-
-  categories.forEach((category) => {
-    const categoryPath = path.join(contentRoot, category);
-    const files = fs.readdirSync(categoryPath).filter((f) => f.toLowerCase().endsWith(".json"));
-
-    files.forEach((file) => {
-      const recipePath = path.join(categoryPath, file);
-      let raw;
-      try {
-        raw = JSON.parse(fs.readFileSync(recipePath, "utf8"));
-      } catch (e) {
-        parseErrors++;
-        console.warn("⚠️  Skipping invalid JSON:", recipePath, "-", e.message);
-        return;
-      }
-
-      // basics
-      const categoryName = String(category).trim();
-      const filename = file.replace(/\.json$/i, "");
-      const slugCategory = safeSlug(categoryName);
-
-      // normalize fields
-      let title = pick(raw, ["title","Title","name","recipeTitle"]) || (raw.meta && raw.meta.title) || filename;
-      title = String(title).trim();
-
-      let source = pick(raw, ["source","Source","from","author","Author","credit","Credit"]);
-      let yld = pick(raw, ["yield","Yield","servings","Servings","Makes","makes","Qty","qty","quantity"]);
-      let remarks = pick(raw, ["remarks","Remarks","notes","Notes","note","Note","description","Description"]);
-
-      const ingredients = toArray(pick(raw, ["ingredients","Ingredients"]));
-      const instructions = toSteps(pick(raw, ["instructions","Instructions","steps","Steps"]));
-      const tags = toArray(pick(raw, ["tags","Tags","tag","Tag"]));
-
-      const slugFilename = safeSlug(pick(raw, ["slug","slugFilename"]) || filename || title);
-
-      // extract embedded Yield/Source
-      if (remarks && typeof remarks === "string") {
-        let r = remarks;
-        const mYield = r.match(/\bYield\s*:\s*(.+?)(?=(?:\bSource\s*:)|$)/is);
-        if (!yld && mYield) yld = mYield[1].trim().replace(/\s*\.*\s*$/, "");
-        const mSource = r.match(/\bSource\s*:\s*(.+?)(?=(?:\bYield\s*:)|$)/is);
-        if (!source && mSource) source = mSource[1].trim().replace(/\s*\.*\s*$/, "");
-        r = r
-          .replace(/\bYield\s*:\s*.+?(?=(?:\bSource\s*:)|$)/gis, "")
-          .replace(/\bSource\s*:\s*.+?(?=(?:\bYield\s*:)|$)/gis, "")
-          .replace(/\s{2,}/g, " ")
-          .trim();
-        if (title && r.toLowerCase().endsWith(String(title).toLowerCase())) {
-          r = r.slice(0, r.length - String(title).length).trim();
-        }
-        remarks = r || undefined;
-      }
-
-      // ---------- image resolution ----------
-      let imgPick = pick(raw, ["image","Image","photo","Photo","picture","img","image_url","imageUrl","images"]);
-      if (Array.isArray(imgPick) && imgPick.length) imgPick = imgPick.find(Boolean);
-
-      let imageAbs; // full URL
-      let imagePath; // site-absolute (/images/...)
-
-      let imageAlt = pick(raw, ["imageAlt","alt","caption","Caption"]) || title || filename;
-      let imageCredit = pick(raw, ["imageCredit","credit","Credit","sourceImage","photoCredit"]);
-
-      if (typeof imgPick === "string" && imgPick.trim()) {
-        const v = imgPick.trim();
-        if (isAbsUrl(v)) {
-          imageAbs = v;
-        } else if (isSiteAbs(v)) {
-          imagePath = v;
-        } else {
-          if (hasExt(v)) {
-            // explicit filename with extension -> map to /images/<v>
-            imagePath = `/images/${v}`;
-            // NEW: if that exact path doesn't exist, try fuzzy replacement
-            const rel = imagePath.replace(/^\/images\//, "");
-            const full = path.join(fsImagesDir, rel);
-            if (!fs.existsSync(full)) {
-              const base = path.basename(rel, path.extname(rel));
-              const fuzzy = resolveFuzzy(fsImagesDir, slugCategory, base);
-              if (fuzzy) imagePath = fuzzy;
-            }
-          } else {
-            // no extension -> try exact then fuzzy in /src/images
-            const exact = resolveExact(fsImagesDir, slugCategory, v);
-            const fuzzy = exact || resolveFuzzy(fsImagesDir, slugCategory, v);
-            imagePath = fuzzy || `/images/${v}`; // last resort (may 404)
-          }
-        }
-      }
-
-      if (!imageAbs && !imagePath) {
-        // try slug, title, filename (exact then fuzzy)
-        const bases = [slugFilename, safeSlug(title), filename].filter(Boolean);
-        for (const b of bases) {
-          imagePath = resolveExact(fsImagesDir, slugCategory, b) || resolveFuzzy(fsImagesDir, slugCategory, b);
-          if (imagePath) break;
-        }
-      }
-
-      const recipe = {
-        ...raw,
-        category: categoryName,
-        filename,
-        slugCategory,
-        slugFilename,
-
-        title,
-        source: source ? String(source).trim() : undefined,
-        yield: yld ? String(yld).trim() : undefined,
-        remarks: remarks ? String(remarks).trim() : undefined,
-
-        ingredients,
-        instructions,
-        tags,
-
-        image: imagePath || undefined,    // use with | url
-        imageAbs: imageAbs || undefined,  // absolute URL (no | url)
-        imageAlt: imageAlt ? String(imageAlt).trim() : undefined,
-        imageCredit: imageCredit ? String(imageCredit).trim() : undefined,
-      };
-
-      allRecipes.push(recipe);
-    });
-  });
-
-  console.log("Loaded recipes:", allRecipes.length);
-  if (parseErrors) console.log(`⚠️  JSON parse errors: ${parseErrors}`);
-
-  allRecipes.sort((a, b) => {
-    if (a.slugCategory === b.slugCategory) {
-      return a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
-    }
-    return a.slugCategory.localeCompare(b.slugCategory);
-  });
-
-  return allRecipes;
-};
-
-
+  {% if recipe.tags and recipe.tags.length %}
+    <h2>Tags</h2>
+    <ul class="tags">
+      {% for t in recipe.tags %}
+        <li><a href="{{ '/tags/' | url }}#{{ t | slug }}">{{ t }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</article>
 
