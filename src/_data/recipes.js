@@ -6,6 +6,46 @@ const slugify = require("slugify");
 const safeSlug = (str) =>
   slugify(String(str || ""), { lower: true, strict: true });
 
+// ↓ new: normalize a name for fuzzy matching (case/punctuation-insensitive)
+const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// ↓ new: shared image helpers
+const exts = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".JPG", ".PNG", ".JPEG", ".WEBP", ".GIF"];
+const hasExt = (s) => /\.[A-Za-z0-9]{2,5}$/.test(s);
+
+// exact: look for /src/images/<base><ext> and /src/images/<slugCategory>/<base><ext>
+function resolveExact(fsImagesDir, slugCategory, base) {
+  for (const ext of exts) {
+    const flat = path.join(fsImagesDir, `${base}${ext}`);
+    if (fs.existsSync(flat)) return `/images/${base}${ext}`;
+    if (slugCategory) {
+      const inCat = path.join(fsImagesDir, slugCategory, `${base}${ext}`);
+      if (fs.existsSync(inCat)) return `/images/${slugCategory}/${base}${ext}`;
+    }
+  }
+  return undefined;
+}
+
+// fuzzy: case/punctuation-insensitive match inside /src/images and /src/images/<slugCategory>
+function resolveFuzzy(fsImagesDir, slugCategory, base) {
+  const wanted = norm(base);
+  const dirs = [fsImagesDir, slugCategory ? path.join(fsImagesDir, slugCategory) : null].filter(Boolean);
+
+  for (const dir of dirs) {
+    let files = [];
+    try { files = fs.readdirSync(dir); } catch { /* ignore */ }
+    for (const f of files) {
+      const ext = path.extname(f);
+      if (!exts.includes(ext)) continue;
+      const nb = norm(path.basename(f, ext));
+      if (nb === wanted) {
+        return dir === fsImagesDir ? `/images/${f}` : `/images/${slugCategory}/${f}`;
+      }
+    }
+  }
+  return undefined;
+}
+
 const pick = (obj, keys) => {
   if (!obj || typeof obj !== "object") return undefined;
   for (const k of keys) {
@@ -165,6 +205,76 @@ module.exports = () => {
         remarks = r || undefined;
       }
 
+      // --- Image normalization & discovery (src/images) ---
+      const isAbsoluteUrl = (v) =>
+        typeof v === "string" && /^(?:https?:)?\/\//i.test(v);
+      const hasLeadingSlash = (v) =>
+        typeof v === "string" && v.startsWith("/");
+
+      let imgPick = pick(raw, [
+        "image",
+        "Image",
+        "photo",
+        "Photo",
+        "picture",
+        "img",
+        "image_url",
+        "imageUrl",
+        "images",
+      ]);
+      if (Array.isArray(imgPick) && imgPick.length) {
+        imgPick = imgPick.find(Boolean);
+      }
+
+      let imageAbs;    // full URL (http/https/data)
+      let imagePath;   // site-absolute path like /images/foo.jpg
+      let imageAlt =
+        pick(raw, ["imageAlt", "alt", "caption", "Caption"]) || title || filename;
+      let imageCredit = pick(raw, [
+        "imageCredit",
+        "credit",
+        "Credit",
+        "sourceImage",
+        "photoCredit",
+      ]);
+
+      if (typeof imgPick === "string" && imgPick.trim()) {
+        const v = imgPick.trim();
+        if (isAbsoluteUrl(v)) {
+          imageAbs = v; // use as-is in template
+        } else if (hasLeadingSlash(v)) {
+          // e.g. /images/foo.jpg (| url will handle /cookbook)
+          imagePath = v;
+        } else {
+          // relative filename
+          if (hasExt(v)) {
+            // explicit extension -> assume /src/images/<name>
+            imagePath = `/images/${v}`;
+          } else {
+            // no extension -> try exact then fuzzy inside /src/images
+            const fsPathImages = path.join(__dirname, "..", "images");
+            imagePath =
+              resolveExact(fsPathImages, slugCategory, v) ||
+              resolveFuzzy(fsPathImages, slugCategory, v) ||
+              `/images/${v}`; // last-resort fallback
+          }
+        }
+      }
+
+      // If still missing, try to auto-discover in /src/images (exact then fuzzy)
+      if (!imageAbs && !imagePath) {
+        const fsPathImages = path.join(__dirname, "..", "images"); // /src/images
+        const tryBases = [slugFilename, safeSlug(title), filename].filter(Boolean);
+        let found;
+        for (const base of tryBases) {
+          found =
+            resolveExact(fsPathImages, slugCategory, base) ||
+            resolveFuzzy(fsPathImages, slugCategory, base);
+          if (found) break;
+        }
+        if (found) imagePath = found;
+      }
+
       // Assemble final record
       const recipe = {
         // keep original fields for reference (shallow copy)
@@ -184,6 +294,12 @@ module.exports = () => {
         ingredients,
         instructions,
         tags,
+
+        // image fields
+        image: imagePath || undefined,    // use with | url
+        imageAbs: imageAbs || undefined,  // absolute URL (no | url)
+        imageAlt: imageAlt ? String(imageAlt).trim() : undefined,
+        imageCredit: imageCredit ? String(imageCredit).trim() : undefined,
       };
 
       // Friendly warnings (optional)
