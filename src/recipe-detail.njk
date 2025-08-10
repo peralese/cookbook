@@ -1,0 +1,57 @@
+---
+pagination:
+  data: recipes
+  size: 1
+  alias: recipe
+permalink: "/recipes/{{ recipe.slugCategory }}/{{ recipe.slugFilename }}/"
+layout: base.njk
+eleventyComputed:
+  title: "{{ recipe.title | default('Recipe') }}"
+---
+
+<nav class="breadcrumbs">
+  <a href="{{ '/' | url }}">Home</a> /
+  <a href="{{ '/categories/' | url }}">Categories</a> /
+  <a href="{{ '/categories/' | url }}{{ recipe.slugCategory }}/">{{ recipe.category }}</a>
+</nav>
+
+<article class="recipe">
+  <header>
+    <h1>{{ recipe.title }}</h1>
+    {% if recipe.source %}
+      <p class="source">Source: {{ recipe.source }}</p>
+    {% endif %}
+    <button id="print" onclick="window.print()">🖨️ Print</button>
+  </header>
+
+  {% if recipe.description %}
+    <p class="description">{{ recipe.description }}</p>
+  {% endif %}
+
+  {% if recipe.ingredients %}
+    <h2>Ingredients</h2>
+    <ul>
+      {% for item in recipe.ingredients %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if recipe.instructions %}
+    <h2>Instructions</h2>
+    <ol>
+      {% for step in recipe.instructions %}
+        <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+
+  {% if recipe.tags and recipe.tags.length %}
+    <p class="tags">
+      <strong>Tags:</strong>
+      {% for t in recipe.tags %}
+        <a href="{{ '/tags/' | url }}#{{ t | slug }}">{{ t }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+</article>
