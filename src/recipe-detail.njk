@@ -54,10 +54,29 @@ eleventyComputed:
     <p class="source">{{ recipe.source }}</p>
   {% endif %}
 
-  {% if recipe.image %}
+  {# Image section (robust, Nunjucks-safe) #}
+  {% set rawImg = recipe.image or recipe.imageAbs or recipe.img or recipe.photo %}
+  {% if rawImg %}
+    {# Absolute URL? keep as-is #}
+    {% if rawImg.indexOf('http://') == 0 or rawImg.indexOf('https://') == 0 or rawImg.indexOf('//') == 0 %}
+      {% set imgSrc = rawImg %}
+    {# Starts with "/"? treat as site-absolute and run through |url so pathPrefix is added #}
+    {% elseif rawImg[0] == '/' %}
+      {% set imgSrc = rawImg | url %}
+    {# Otherwise assume it's a filename in /src/images -> /images/<file> (then |url for pathPrefix) #}
+    {% else %}
+      {% set imgSrc = ('/images/' + rawImg) | url %}
+    {% endif %}
+
     <h2>Image</h2>
-    <img src="{{ recipe.image | url }}" alt="{{ displayTitle }}" loading="lazy">
+    <figure class="recipe-figure">
+      <img src="{{ imgSrc }}" alt="{{ recipe.imageAlt or displayTitle }}" loading="lazy" decoding="async">
+      {% if recipe.imageCredit %}
+        <figcaption class="image-credit">{{ recipe.imageCredit }}</figcaption>
+      {% endif %}
+    </figure>
   {% endif %}
+
 
   {% if recipe.tags and recipe.tags.length %}
     <h2>Tags</h2>
