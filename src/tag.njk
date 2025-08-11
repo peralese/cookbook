@@ -13,7 +13,7 @@ layout: base.njk
 <ul>
   {% for r in items %}
     <li>
-      <a href="{{ ('/recipes/' ~ r.slugCategory ~ '/' ~ r.slugTitle ~ '/') | url }}">
+      <a href="{{ ('/recipes/' ~ r.slugCategory ~ '/' ~ r.filename ~ '/') | url }}">
         {{ r.title or r.filename }}
       </a>
     </li>
