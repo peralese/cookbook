@@ -1,25 +1,27 @@
 ---
-layout: base.njk
 pagination:
-  data: collections.tagged
+  data: collections.tagged | keys
   size: 1
   alias: tagName
-  resolve: keys
-permalink: "/tags/{{ tagName | slug }}/"
-eleventyComputed:
-  title: "Recipes tagged: {{ tagName }}"
+permalink: "{{ ('/tags/' ~ (tagName | slug) ~ '/') | url }}"
+layout: layouts/base.njk
 ---
 
-<h1>Recipes tagged: {{ tagName }}</h1>
+<h1>Tag: {{ tagName }}</h1>
+
+{% set items = collections.tagged[tagName] or [] %}
+<p>{{ items | length }} {{ items | length == 1 ? "recipe" : "recipes" }}</p>
+
 <ul>
-{% for r in collections.tagged[tagName] %}
-  <li>
-    <a href="{{ '/recipes/' ~ (r.category | slug) ~ '/' ~ (r.title | slug) ~ '/' | url }}">
-      {{ r.title }}
-    </a>
-  </li>
-{% endfor %}
+  {% for r in items %}
+    <li>
+      <a href="{{ ('/recipes/' ~ r.slugCategory ~ '/' ~ r.slugTitle ~ '/') | url }}">
+        {{ r.title or r.filename }}
+      </a>
+    </li>
+  {% endfor %}
 </ul>
+
 
 
 

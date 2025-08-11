@@ -1,16 +1,23 @@
 ---
-layout: base.njk
-title: Tags
+title: "All Tags"
+permalink: "{{ '/tags/' | url }}"
+layout: layouts/base.njk
 ---
 
-<h1>Tags</h1>
+<h1>All Tags</h1>
+
+{% set tagMap = collections.tagged %}
+{% set allTags = tagMap | keys | sort %}
+
 <ul>
-{% for tag in collections.tagged | keys | sort %}
-  <li>
-    <a href="{{ '/tags/' ~ (tag | slug) ~ '/' | url }}">{{ tag }}</a>
-    ({{ collections.tagged[tag].length }})
-  </li>
-{% endfor %}
+  {% for t in allTags %}
+    {% set count = (tagMap[t] or []).length %}
+    <li>
+      <a href="{{ ('/tags/' ~ (t | slug) ~ '/') | url }}">
+        {{ t }} <small>({{ count }})</small>
+      </a>
+    </li>
+  {% endfor %}
 </ul>
 
 
