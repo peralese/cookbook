@@ -1,17 +1,15 @@
 ---
 pagination:
-  data: collections.tagged | keys
+  data: collections.tagged     # paginate over the object itself (keys)
   size: 1
   alias: tagName
-permalink: "/tags/{{ tagName | slug }}/" 
+permalink: "/tags/{{ tagName | slug }}/"
 layout: base.njk
 ---
 
 <h1>Tag: {{ tagName }}</h1>
 
 {% set items = collections.tagged[tagName] or [] %}
-<p>{{ items | length }} {{ items | length == 1 ? "recipe" : "recipes" }}</p>
-
 <ul>
   {% for r in items %}
     <li>
@@ -21,6 +19,8 @@ layout: base.njk
     </li>
   {% endfor %}
 </ul>
+
+
 
 
 

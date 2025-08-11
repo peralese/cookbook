@@ -1,6 +1,6 @@
 ---
 title: "All Tags"
-permalink: "{{ '/tags/' | url }}"
+permalink: "/tags/"
 layout: base.njk
 ---
 
@@ -11,13 +11,11 @@ layout: base.njk
 
 <ul>
   {% for t in allTags %}
-    {% set count = (tagMap[t] or []).length %}
     <li>
-      <a href="{{ ('/tags/' ~ (t | slug) ~ '/') | url }}">
-        {{ t }} <small>({{ count }})</small>
-      </a>
+      <a href="{{ ('/tags/' ~ (t | slug) ~ '/') | url }}">{{ t }}</a>
     </li>
   {% endfor %}
 </ul>
+
 
 
