@@ -12,6 +12,13 @@ module.exports = function (eleventyConfig) {
     return slugify(input, { lower: true, strict: true });
   });
 
+  // NEW: "flat" slug filter (removes dashes too)
+  // "Mom’s Empanada Dough" -> "momsempanadadough"
+  eleventyConfig.addFilter("flatSlug", (input) => {
+    if (typeof input !== "string") return "";
+    return slugify(input, { lower: true, strict: true }).replace(/-/g, "");
+  });
+
   eleventyConfig.addFilter("keys", (obj) => {
     if (typeof obj !== "object" || obj === null) return [];
     return Object.keys(obj);
@@ -21,27 +28,45 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("safeJson", (value) =>
     JSON.stringify(value, null, 2)
   );
+  
+  // Clean tag label for display: drop apostrophes/quotes
+  eleventyConfig.addFilter("tagLabel", (s) =>
+  String(s || "").replace(/[’'"]/g, "")
+  );
+
+// Clean tag id for anchors/links
+eleventyConfig.addFilter("tagId", (s) =>
+  String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-")
+);
 
   // =========================
   // Passthrough & Watch
   // =========================
-  eleventyConfig.addPassthroughCopy("content");
-  eleventyConfig.addPassthroughCopy("src/styles.css");
-  eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
-  eleventyConfig.addPassthroughCopy("src/search.js");
-  eleventyConfig.addPassthroughCopy("src/images");
-  eleventyConfig.addPassthroughCopy("src/print.css");
+  // Only copy if the folder exists (prevents the Benchmark error)
+  if (fs.existsSync("content")) {
+    eleventyConfig.addPassthroughCopy("content");
+  }
+  if (fs.existsSync("src/styles.css")) eleventyConfig.addPassthroughCopy("src/styles.css");
+  if (fs.existsSync("src/_data/categories.json"))
+    eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
+  if (fs.existsSync("src/search.js")) eleventyConfig.addPassthroughCopy("src/search.js");
+  if (fs.existsSync("src/images")) eleventyConfig.addPassthroughCopy("src/images");
+  if (fs.existsSync("src/print.css")) eleventyConfig.addPassthroughCopy("src/print.css");
 
-  eleventyConfig.addWatchTarget("content");
-  eleventyConfig.addWatchTarget("src/print.css");
+  if (fs.existsSync("content")) eleventyConfig.addWatchTarget("content");
+  if (fs.existsSync("src/print.css")) eleventyConfig.addWatchTarget("src/print.css");
 
   // =========================
   // Helpers
   // =========================
   function loadAllRecipes({ excludeDrafts = true } = {}) {
-    const contentRoot = path.join(__dirname, "content");
+    // If your JSON lives under src/content, use that. Otherwise, set to "content".
+    const contentRoot = fs.existsSync(path.join(__dirname, "src", "content"))
+      ? path.join(__dirname, "src", "content")
+      : path.join(__dirname, "content");
+
     if (!fs.existsSync(contentRoot)) {
-      console.warn("⚠️  content/ folder not found, skipping recipe load.");
+      console.warn("⚠️  content folder not found at src/content or content/, skipping recipe load.");
       return [];
     }
 
@@ -70,13 +95,25 @@ module.exports = function (eleventyConfig) {
           const filename = file.replace(/\.json$/i, "");
           data.category = category;
           data.filename = filename;
+
+          // Slugs
           data.slugCategory = slugify(category, { lower: true, strict: true });
-          data.slugTitle = data.title
-            ? slugify(data.title, { lower: true, strict: true })
-            : slugify(filename, { lower: true, strict: true });
+          const titleOrFile = data.title
+            ? String(data.title)
+            : String(filename);
+
+          // Dashed title slug (kept for compatibility if referenced elsewhere)
+          data.slugTitle = slugify(titleOrFile, { lower: true, strict: true });
+
+          // NEW: flat, punctuation-free, lowercased title slug (no dashes)
+          data.slugTitleFlat = data.slugTitle.replace(/-/g, "");
+
           data.id = `${category}/${filename}`;
 
-          // Ensure tags is an array if present
+          // ✅ Use the flat title slug in the URL (fixes %E2%80%99 and underscores)
+          data.urlPath = `/recipes/${data.slugCategory}/${data.slugTitleFlat}/`;
+
+          // Tags normalization
           if (Array.isArray(data.tags)) {
             data.tags = data.tags
               .map((t) => (t == null ? "" : String(t).trim()))
@@ -104,11 +141,6 @@ module.exports = function (eleventyConfig) {
   });
 
   // Tag map: { "<Tag Name>": [recipe, ...], ... }
-  // Patch notes:
-  //  - ignores draft:true
-  //  - normalizes whitespace in tags
-  //  - prevents duplicate tags per recipe (case-insensitive)
-  //  - merges keys that differ only by case (keeps first-seen casing)
   eleventyConfig.addCollection("tagged", function () {
     const recipes = loadAllRecipes();
     /** @type {Record<string, Array<Object>>} */
@@ -126,7 +158,7 @@ module.exports = function (eleventyConfig) {
         if (seenForThisRecipe.has(keyLC)) return; // skip dupes within the recipe
         seenForThisRecipe.add(keyLC);
 
-        // Find if we already have this tag under a different case
+        // Merge keys that differ only by case (keep first-seen casing)
         const existingKey =
           Object.keys(tagMap).find((k) => k.toLowerCase() === keyLC) || trimmed;
 
@@ -135,7 +167,7 @@ module.exports = function (eleventyConfig) {
       });
     });
 
-    // Optional: sort each tag's items by title (if present), then filename
+    // Sort each tag's items by title (if present), then filename
     for (const k of Object.keys(tagMap)) {
       tagMap[k].sort((a, b) => {
         const aKey = (a.title || a.filename || "").toLowerCase();
@@ -169,3 +201,4 @@ module.exports = function (eleventyConfig) {
       : "/cookbook/",
   };
 };
+

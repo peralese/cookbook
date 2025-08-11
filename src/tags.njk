@@ -1,21 +1,43 @@
 ---
-title: "All Tags"
-permalink: "/tags/"
 layout: base.njk
+title: All Tags
+permalink: /tags/
+eleventyExcludeFromCollections: true
 ---
 
-<h1>All Tags</h1>
+<div class="container">
+  <div class="card">
+    <h1>All Tags</h1>
 
-{% set tagMap = collections.tagged %}
-{% set allTags = tagMap | keys | sort %}
+    {% set tagMap = collections.tagged or {} %}
+    {% set allTags = tagMap | keys | sort %}
 
-<ul>
-  {% for t in allTags %}
-    <li>
-      <a href="{{ ('/tags/' ~ (t | slug) ~ '/') | url }}">{{ t }}</a>
-    </li>
-  {% endfor %}
-</ul>
+    {% if allTags.length == 0 %}
+      <p>No tags found.</p>
+    {% else %}
+      <ul>
+        {% for tagName in allTags %}
+          {% set count = (tagMap[tagName] or []).length %}
+          {# slug for the URL: lowercase, remove apostrophes/quotes, spaces -> dashes #}
+          {% set tagSlug = tagName
+            | lower
+            | replace("’","")
+            | replace("'","")
+            | replace('"',"")
+            | replace(" ", "-")
+          %}
+          <li>
+            <a href="{{ '/tags/' | url }}{{ tagSlug }}/">{{ tagName }}</a>
+            <span>({{ count }})</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+
+
 
 
 
