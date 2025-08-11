@@ -3,7 +3,7 @@ pagination:
   data: collections.tagged | keys
   size: 1
   alias: tagName
-permalink: "{{ ('/tags/' ~ (tagName | slug) ~ '/') | url }}"
+permalink: "/tags/{{ tagName | slug }}/" 
 layout: base.njk
 ---
 
