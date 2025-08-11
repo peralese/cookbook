@@ -139,7 +139,7 @@ module.exports = function (eleventyConfig) {
           data.id = `${category}/${filename}`;
 
           // ✅ Final URL (uses the collision-proof flat slug)
-          data.urlPath = `/recipes/${data.slugCategory}/${data.slugTitleFlat}/`;
+          data.urlPath = `/recipes/${data.slugCategory}/${data.slugTitle}/`;
 
           // Tags normalization
           if (Array.isArray(data.tags)) {
