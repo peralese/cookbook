@@ -1,0 +1,26 @@
+---
+layout: base.njk
+pagination:
+  data: collections.tagged
+  size: 1
+  alias: tagName
+  resolve: keys
+permalink: "/tags/{{ tagName | slug }}/"
+eleventyComputed:
+  title: "Recipes tagged: {{ tagName }}"
+---
+
+<h1>Recipes tagged: {{ tagName }}</h1>
+<ul>
+{% for r in collections.tagged[tagName] %}
+  <li>
+    <a href="{{ '/recipes/' ~ (r.category | slug) ~ '/' ~ (r.title | slug) ~ '/' | url }}">
+      {{ r.title }}
+    </a>
+  </li>
+{% endfor %}
+</ul>
+
+
+
+

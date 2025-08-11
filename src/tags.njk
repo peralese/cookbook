@@ -1,20 +1,16 @@
 ---
 layout: base.njk
 title: Tags
-permalink: "/tags/index.html"
 ---
 
 <h1>Tags</h1>
-
 <ul>
-  {# collections.tagged is your custom map: { "Mom's": [recipes...], ... } #}
-  {% for tag in collections.tagged | keys | sort %}
-    <li>
-      <a href="{{ ('/tags/' + (tag | slug) + '/') | url }}">
-        {{ tag }}
-      </a>
-      ({{ collections.tagged[tag].length }})
-    </li>
-  {% endfor %}
+{% for tag in collections.tagged | keys | sort %}
+  <li>
+    <a href="{{ '/tags/' ~ (tag | slug) ~ '/' | url }}">{{ tag }}</a>
+    ({{ collections.tagged[tag].length }})
+  </li>
+{% endfor %}
 </ul>
+
 
