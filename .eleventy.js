@@ -2,6 +2,12 @@
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
+const crypto = require("crypto");
+
+// Helper: flat, lowercase slug with no punctuation or dashes
+function flatSlug(s) {
+  return slugify(String(s || ""), { lower: true, strict: true }).replace(/-/g, "");
+}
 
 module.exports = function (eleventyConfig) {
   // =========================
@@ -12,7 +18,6 @@ module.exports = function (eleventyConfig) {
     return slugify(input, { lower: true, strict: true });
   });
 
-  // NEW: "flat" slug filter (removes dashes too)
   // "Mom’s Empanada Dough" -> "momsempanadadough"
   eleventyConfig.addFilter("flatSlug", (input) => {
     if (typeof input !== "string") return "";
@@ -28,16 +33,16 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("safeJson", (value) =>
     JSON.stringify(value, null, 2)
   );
-  
+
   // Clean tag label for display: drop apostrophes/quotes
   eleventyConfig.addFilter("tagLabel", (s) =>
-  String(s || "").replace(/[’'"]/g, "")
+    String(s || "").replace(/[’'"]/g, "")
   );
 
-// Clean tag id for anchors/links
-eleventyConfig.addFilter("tagId", (s) =>
-  String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-")
-);
+  // Clean tag id for anchors/links
+  eleventyConfig.addFilter("tagId", (s) =>
+    String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-")
+  );
 
   // =========================
   // Passthrough & Watch
@@ -60,7 +65,7 @@ eleventyConfig.addFilter("tagId", (s) =>
   // Helpers
   // =========================
   function loadAllRecipes({ excludeDrafts = true } = {}) {
-    // If your JSON lives under src/content, use that. Otherwise, set to "content".
+    // Detect where your JSON lives
     const contentRoot = fs.existsSync(path.join(__dirname, "src", "content"))
       ? path.join(__dirname, "src", "content")
       : path.join(__dirname, "content");
@@ -76,6 +81,9 @@ eleventyConfig.addFilter("tagId", (s) =>
 
     /** @type {Array<Object>} */
     const allRecipes = [];
+
+    // Track used slugs per category to avoid permalink collisions
+    const seenByCategory = new Map(); // key: slugCategory, value: Set of used slugs
 
     categories.forEach((category) => {
       const categoryPath = path.join(contentRoot, category);
@@ -96,21 +104,41 @@ eleventyConfig.addFilter("tagId", (s) =>
           data.category = category;
           data.filename = filename;
 
-          // Slugs
+          // Category slug
           data.slugCategory = slugify(category, { lower: true, strict: true });
-          const titleOrFile = data.title
-            ? String(data.title)
-            : String(filename);
 
-          // Dashed title slug (kept for compatibility if referenced elsewhere)
-          data.slugTitle = slugify(titleOrFile, { lower: true, strict: true });
+          // Base slug from title; fallback to filename
+          const base = data.title ? String(data.title) : String(filename);
+          const baseFlat = flatSlug(base);
+          const fileFlat = flatSlug(filename);
 
-          // NEW: flat, punctuation-free, lowercased title slug (no dashes)
-          data.slugTitleFlat = data.slugTitle.replace(/-/g, "");
+          // Ensure uniqueness within this category
+          if (!seenByCategory.has(data.slugCategory)) {
+            seenByCategory.set(data.slugCategory, new Set());
+          }
+          const used = seenByCategory.get(data.slugCategory);
+
+          let uniqueFlat = baseFlat;
+          if (used.has(uniqueFlat)) {
+            // Try a deterministic filename suffix
+            const candidate = `${baseFlat}-${fileFlat}`;
+            if (!used.has(candidate)) {
+              uniqueFlat = candidate;
+            } else {
+              // Last resort: short hash suffix from filename
+              const short = crypto.createHash("md5").update(filename).digest("hex").slice(0, 6);
+              uniqueFlat = `${baseFlat}-${short}`;
+            }
+          }
+          used.add(uniqueFlat);
+
+          // Keep dashed too (compat), and the final unique flat slug
+          data.slugTitle = slugify(base, { lower: true, strict: true });
+          data.slugTitleFlat = uniqueFlat;
 
           data.id = `${category}/${filename}`;
 
-          // ✅ Use the flat title slug in the URL (fixes %E2%80%99 and underscores)
+          // ✅ Final URL (uses the collision-proof flat slug)
           data.urlPath = `/recipes/${data.slugCategory}/${data.slugTitleFlat}/`;
 
           // Tags normalization
@@ -134,8 +162,6 @@ eleventyConfig.addFilter("tagId", (s) =>
   // =========================
   // Collections
   // =========================
-
-  // All recipes (for listing/search/etc.)
   eleventyConfig.addCollection("recipes", function () {
     return loadAllRecipes();
   });

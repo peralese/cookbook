@@ -1,91 +1,61 @@
 ---
 pagination:
-  data: recipes
+  data: collections.recipes
   size: 1
   alias: recipe
-  permalink: "/recipes/{{ slugCategory }}/{{ slugFilename }}/"
-  layout: base.njk
-  eleventyComputed:
-  # Page <title> (browser tab)
-  title: "{{ (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) }}"
-  tags: "{{ recipe.tags }}"
+permalink: "{{ recipe.urlPath | url }}"
+layout: base.njk
 ---
 
-{# Compute a display title once, reuse everywhere #}
-{% set displayTitle = (recipe.title and recipe.title | trim) or (recipe.filename | replace('-', ' ') | title) %}
+<div class="container">
+  <div class="card">
+    <h1>{{ recipe.title or recipe.filename }}</h1>
 
-<article class="recipe-page">
-  <header class="recipe-hero">
-    <h1 class="recipe-title">{{ displayTitle }}</h1>
-    <button class="print-btn" onclick="window.print()">🖨 Print</button>
-  </header>
-  
-  {# ---- ORDER: Ingredients, Instructions, Remarks, Yield, Source, Image, Tags ---- #}
+    <p class="breadcrumbs">
+      <a href="{{ '/' | url }}">Home</a> ›
+      <a href="{{ '/recipes/page/1/' | url }}">Recipes</a> ›
+      {{ recipe.category }}
+    </p>
 
-  {% if recipe.ingredients and recipe.ingredients.length %}
-    <h2>Ingredients</h2>
-    <ul class="ingredients">
-      {% for item in recipe.ingredients %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
-  {% if recipe.instructions and recipe.instructions.length %}
-    <h2>Instructions</h2>
-    <ol class="instructions">
-      {% for step in recipe.instructions %}
-        <li>{{ step }}</li>
-      {% endfor %}
-    </ol>
-  {% endif %}
-
-  {% if recipe.remarks %}
-    <h2>Remarks</h2>
-    <p class="notes">{{ recipe.remarks }}</p>
-  {% endif %}
-
-  {% if recipe.yield %}
-    <h2>Yield</h2>
-    <p class="yield">{{ recipe.yield }}</p>
-  {% endif %}
-
-  {% if recipe.source %}
-    <h2>Source</h2>
-    <p class="source">{{ recipe.source }}</p>
-  {% endif %}
-
-  {# Image section (robust, Nunjucks-safe) #}
-  {% set rawImg = recipe.image or recipe.imageAbs or recipe.img or recipe.photo %}
-  {% if rawImg %}
-    {# Absolute URL? keep as-is #}
-    {% if rawImg.indexOf('http://') == 0 or rawImg.indexOf('https://') == 0 or rawImg.indexOf('//') == 0 %}
-      {% set imgSrc = rawImg %}
-    {# Starts with "/"? treat as site-absolute and run through |url so pathPrefix is added #}
-    {% elseif rawImg[0] == '/' %}
-      {% set imgSrc = rawImg | url %}
-    {# Otherwise assume it's a filename in /src/images -> /images/<file> (then |url for pathPrefix) #}
-    {% else %}
-      {% set imgSrc = ('/images/' + rawImg) | url %}
+    {% if recipe.image %}
+      <p><img src="{{ recipe.image | url }}" alt="{{ recipe.title }}"></p>
     {% endif %}
 
-    <h2>Image</h2>
-    <figure class="recipe-figure">
-      <img src="{{ imgSrc }}" alt="{{ recipe.imageAlt or displayTitle }}" loading="lazy" decoding="async">
-      {% if recipe.imageCredit %}
-        <figcaption class="image-credit">{{ recipe.imageCredit }}</figcaption>
-      {% endif %}
-    </figure>
-  {% endif %}
+    {% if recipe.ingredients and recipe.ingredients.length %}
+      <h2>Ingredients</h2>
+      <ul>
+        {% for ing in recipe.ingredients %}
+          <li>{{ ing }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
+    {% if recipe.instructions and recipe.instructions.length %}
+      <h2>Instructions</h2>
+      <ol>
+        {% for step in recipe.instructions %}
+          <li>{{ step }}</li>
+        {% endfor %}
+      </ol>
+    {% endif %}
 
-  {% if recipe.tags and recipe.tags.length %}
-    <h2>Tags</h2>
-    <ul class="tags">
-      {% for t in recipe.tags %}
-        <li><a href="{{ '/tags/' | url }}#{{ t | slug }}">{{ t }}</a></li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-</article>
+    {% if recipe.remarks %}
+      <h2>Remarks</h2>
+      <p style="white-space: pre-line">{{ recipe.remarks }}</p>
+    {% endif %}
 
+    <div style="margin-top:1rem">
+      {% if recipe.yield %}<p><strong>Yield:</strong> {{ recipe.yield }}</p>{% endif %}
+      {% if recipe.source %}<p><strong>Source:</strong> {{ recipe.source }}</p>{% endif %}
+    </div>
+
+    {% if recipe.tags and recipe.tags.length %}
+      <h3>Tags</h3>
+      <ul>
+        {% for t in recipe.tags %}
+          <li>{{ t }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
