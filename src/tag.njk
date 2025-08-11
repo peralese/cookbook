@@ -4,7 +4,7 @@ pagination:
   size: 1
   alias: tagName
 permalink: "{{ ('/tags/' ~ (tagName | slug) ~ '/') | url }}"
-layout: layouts/base.njk
+layout: base.njk
 ---
 
 <h1>Tag: {{ tagName }}</h1>
