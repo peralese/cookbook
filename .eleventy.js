@@ -87,7 +87,7 @@ module.exports = function (eleventyConfig) {
 
           data.id = `${category}/${filename}`;
           // Final URL (dashed, collision‑safe)
-          data.urlPath = `/recipes/${slugCategory}/${uniqueDashed}/`;
+          data.urlPath = `recipes/${slugCategory}/${uniqueDashed}/`;
 
           // Normalize tags
           if (Array.isArray(data.tags)) {
