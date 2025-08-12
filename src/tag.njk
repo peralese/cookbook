@@ -14,11 +14,14 @@ permalink: "tags/{{ tagName | slug }}/"
   {% set items = collections.tagged[tagName] %}
   {% for recipe in items %}
     <li>
-      <a href="{{ recipe.urlPath | url }}">{{ recipe.title }}</a>
+      <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + recipe.slugTitleUnique + '/') | url }}">
+        {{ recipe.title }}
+      </a>
       <em> ({{ recipe.category }})</em>
     </li>
   {% endfor %}
 </ul>
+
 
 
 
