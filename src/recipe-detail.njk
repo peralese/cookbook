@@ -18,7 +18,9 @@ layout: base.njk
     </p>
 
     {% if recipe.image %}
-      <p><img src="{{ recipe.image | url }}" alt="{{ recipe.title }}"></p>
+      <p>{% if recipe.image %}
+  <img src="{{ '/images/' | url }}{{ recipe.image }}" alt="{{ recipe.title }}">
+{% endif %}</p>
     {% endif %}
 
     {% if recipe.ingredients and recipe.ingredients.length %}
