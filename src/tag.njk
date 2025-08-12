@@ -1,24 +1,25 @@
 ---
+layout: base.njk
 pagination:
-  data: collections.tagged     # paginate over the object itself (keys)
+  data: collections.tagged
   size: 1
   alias: tagName
-permalink: "/tags/{{ tagName | slug }}/"
-layout: base.njk
+  resolve: "keys"           # paginate over the object KEYS
+permalink: "tags/{{ tagName | slug }}/"
 ---
 
-<h1>Tag: {{ tagName }}</h1>
+<h1>Tag: {{ tagName | tagLabel }}</h1>
 
-{% set items = collections.tagged[tagName] or [] %}
-<ul>
-  {% for r in items %}
+<ul class="recipe-list">
+  {% set items = collections.tagged[tagName] %}
+  {% for recipe in items %}
     <li>
-    <a href="{{ r.urlPath | url }}">
-      {{ r.title or r.slugFilename }}
-    </a>
+      <a href="{{ recipe.urlPath | url }}">{{ recipe.title }}</a>
+      <em> ({{ recipe.category }})</em>
     </li>
   {% endfor %}
 </ul>
+
 
 
 
