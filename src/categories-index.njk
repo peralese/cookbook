@@ -1,22 +1,23 @@
 ---
 layout: base.njk
-title: Recipes
-permalink: "/categories/index.html"
-breadcrumbs: "<a href='{{ '/' | url }}'>Home</a> / Recipes"
+title: Categories
+permalink: "/categories/"
 ---
 
-<h1>Recipes</h1>
+<h1>Categories</h1>
 
-<p>Find a category below or start typing to filter:</p>
+{% if collections.categories and collections.categories.length %}
+  <ul class="category-list">
+    {% for cat in collections.categories %}
+      <li>
+        <a href="{{ ('/category/' + cat.slug + '/') | url }}">{{ cat.label }}</a>
+        <small>({{ cat.items | length }})</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No categories found.</p>
+{% endif %}
 
-<input type="text" id="searchBox" placeholder="Search categories..." />
 
-<p>Select a category to view recipes:</p>
 
-<ul id="categoriesList">
-  {% for category in categories %}
-    <li>
-      <a href="{{ ('/categories/' + (category | slug) + '/') | url }}">{{ category }}</a>
-    </li>
-  {% endfor %}
-</ul>

@@ -1,22 +1,26 @@
 ---
 layout: base.njk
 title: Tags
-permalink: "tags/"
+permalink: "/tags/"
 ---
 
 <h1>Tags</h1>
 
-<ul class="tag-list">
-  {# collections.tagged is an object; iterate over its keys #}
-  {% for tagName in collections.tagged | keys %}
-    <li>
-      <a href="{{ '/tags/' | url }}{{ tagName | slug }}/">
-        {{ tagName | tagLabel }}
-      </a>
-      <em> ({{ collections.tagged[tagName].length }})</em>
-    </li>
-  {% endfor %}
-</ul>
+{% if collections.tagged and (collections.tagged | keys | length) %}
+  <ul class="tag-list">
+    {% for tag in collections.tagged | keys | sort %}
+      {% set tagSlug = tag | slug %}
+      {% set items = collections.tagged[tag] %}
+      <li>
+        <a href="{{ ('/tags/' + tagSlug + '/') | url }}">{{ tag }}</a>
+        <small>({{ items | length }})</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No tags found.</p>
+{% endif %}
+
 
 
 

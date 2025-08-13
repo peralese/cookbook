@@ -1,63 +1,92 @@
 ---
-pagination:
-  data: collections.recipes
-  size: 1
-  alias: recipe
-permalink: "{{ recipe.urlPath | url }}"
 layout: base.njk
 ---
 
-<div class="container">
-  <div class="card">
-    <h1>{{ recipe.title or recipe.filename }}</h1>
+{# Defensive: prefer `recipe` if provided; otherwise try to infer from collections by URL #}
+{% set r = recipe %}
+{% if not r and collections and collections.recipes %}
+  {% for item in collections.recipes %}
+    {% if item.urlPath and item.urlPath == page.url %}
+      {% set r = item %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
-    <p class="breadcrumbs">
-      <a href="{{ '/' | url }}">Home</a> ›
-      <a href="{{ '/recipes/page/1/' | url }}">Recipes</a> ›
-      {{ recipe.category }}
+{% if not r %}
+  <h1>Recipe not found</h1>
+  <p>We couldn’t load this recipe’s data.</p>
+  <p><a href="{{ '/recipes/' | url }}">Back to All Recipes</a></p>
+{% else %}
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <a href="{{ '/' | url }}">Home</a>
+  {% if r.slugCategory %}
+    &raquo; <a href="{{ ('/category/' + r.slugCategory + '/') | url }}">{{ r.category or r.slugCategory }}</a>
+  {% endif %}
+  &raquo; <a href="{{ '/recipes/' | url }}">All Recipes</a>
+</nav>
+
+<header>
+  <h1>{{ r.title or r.filename }}</h1>
+  {% if r.category %}
+    <p class="meta">
+      Category:
+      <a href="{{ ('/category/' + (r.slugCategory or (r.category | slug)) + '/') | url }}">
+        {{ r.category }}
+      </a>
     </p>
+  {% endif %}
 
-    {% if recipe.image %}
-      <p>{% if recipe.image %}
-  <img src="{{ '/images/' | url }}{{ recipe.image }}" alt="{{ recipe.title }}">
-{% endif %}</p>
+  {% if r.tags and r.tags.length %}
+    <p class="tags">
+      Tags:
+      {% for t in r.tags %}
+        <a class="tag" href="{{ ('/tags/' + (t | slug) + '/') | url }}">{{ t }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+</header>
+
+{# ---- Render recipe fields; adjust to your schema as needed ---- #}
+{% if r.description %}<p class="description">{{ r.description }}</p>{% endif %}
+
+{% if r.image %}
+  <figure>
+    <img src="{{ (r.image | url) }}" alt="{{ r.title }}">
+  </figure>
+{% endif %}
+
+{% if r.ingredients %}
+  <section>
+    <h2>Ingredients</h2>
+    <ul>
+      {% for item in r.ingredients %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}
+
+{% if r.directions %}
+  <section>
+    <h2>Directions</h2>
+    <ol>
+      {% for step in r.directions %}
+        <li>{{ step }}</li>
+      {% endfor %}
+    </ol>
+  </section>
+{% endif %}
+
+<footer class="detail-footer">
+  <p>
+    <a href="{{ '/recipes/' | url }}">← Back to All Recipes</a>
+    {% if r.slugCategory %}
+      &nbsp;•&nbsp;
+      <a href="{{ ('/category/' + r.slugCategory + '/') | url }}">More in {{ r.category }}</a>
     {% endif %}
+  </p>
+</footer>
 
-    {% if recipe.ingredients and recipe.ingredients.length %}
-      <h2>Ingredients</h2>
-      <ul>
-        {% for ing in recipe.ingredients %}
-          <li>{{ ing }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+{% endif %}
 
-    {% if recipe.instructions and recipe.instructions.length %}
-      <h2>Instructions</h2>
-      <ol>
-        {% for step in recipe.instructions %}
-          <li>{{ step }}</li>
-        {% endfor %}
-      </ol>
-    {% endif %}
-
-    {% if recipe.remarks %}
-      <h2>Remarks</h2>
-      <p style="white-space: pre-line">{{ recipe.remarks }}</p>
-    {% endif %}
-
-    <div style="margin-top:1rem">
-      {% if recipe.yield %}<p><strong>Yield:</strong> {{ recipe.yield }}</p>{% endif %}
-      {% if recipe.source %}<p><strong>Source:</strong> {{ recipe.source }}</p>{% endif %}
-    </div>
-
-    {% if recipe.tags and recipe.tags.length %}
-      <h3>Tags</h3>
-      <ul>
-        {% for t in recipe.tags %}
-          <li>{{ t }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  </div>
-</div>

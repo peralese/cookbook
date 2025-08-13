@@ -1,26 +1,34 @@
 ---
-pagination:
-  data: categories
-  size: 1
-  alias: category
-permalink: "/categories/{{ category | slug }}/index.html"
 layout: base.njk
+pagination:
+  data: collections.categories
+  size: 1
+  alias: cat
+  addAllPagesToCollections: false
+permalink: "/category/{{ cat.slug }}/"
 eleventyComputed:
-  breadcrumbs: "<a href='{{ '/' | url }}'>Home</a> / <a href='{{ '/categories/' | url }}'>Recipes</a> / {{ category }}"
+  title: "Category: {{ cat.label }}"
 ---
 
-<h1>{{ category }}</h1>
+<h1>Category: {{ cat.label }}</h1>
 
-<ul>
-  {% for recipe in recipes %}
-    {% if recipe.category == category %}
-    <li>
-      <a href="{{ ('/recipes/' + recipe.slugCategory + '/' + (recipe.slugFilename or (recipe.filename | slug)) + '/') | url }}">
-        {{ recipe.title }}
-      </a>
-    </li>
-    {% endif %}
-  {% endfor %}
-</ul>
+<p>
+  <a href="{{ '/categories/' | url }}">← All Categories</a>
+  &nbsp;|&nbsp;
+  <a href="{{ '/recipes/' | url }}">All Recipes</a>
+</p>
+
+{% if cat.items and cat.items.length %}
+  <ul class="recipe-list">
+    {% for r in cat.items %}
+      <li>
+        <a href="{{ r.urlPath | url }}">{{ r.title or r.filename }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No recipes found in this category.</p>
+{% endif %}
+
 
 
