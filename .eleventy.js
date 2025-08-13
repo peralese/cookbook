@@ -41,10 +41,23 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy({ "src/content": "content" });
     eleventyConfig.addWatchTarget("src/content");
   }
-  if (fs.existsSync("src/styles.css")) eleventyConfig.addPassthroughCopy("src/styles.css");
-  if (fs.existsSync("src/_data/categories.json"))
+
+  // CSS (Option A): pass through whichever you actually have
+  if (fs.existsSync("src/style.css")) {
+    eleventyConfig.addPassthroughCopy("src/style.css");
+    eleventyConfig.addWatchTarget("src/style.css");
+  }
+  if (fs.existsSync("src/styles.css")) {
+    eleventyConfig.addPassthroughCopy("src/styles.css");
+    eleventyConfig.addWatchTarget("src/styles.css");
+  }
+
+  if (fs.existsSync("src/_data/categories.json")) {
     eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
-  if (fs.existsSync("src/search.js")) eleventyConfig.addPassthroughCopy("src/search.js");
+  }
+  if (fs.existsSync("src/search.js")) {
+    eleventyConfig.addPassthroughCopy("src/search.js");
+  }
   if (fs.existsSync("src/images")) {
     eleventyConfig.addPassthroughCopy("src/images");
     eleventyConfig.addWatchTarget("src/images");
