@@ -289,6 +289,38 @@ figure img {
   overflow-wrap: anywhere; /* long URLs, etc. */
 }
 
+/* --- Layout container & spacing --- */
+.wrap {
+  max-width: 960px;         /* feel free to bump to 1080/1200 if you like */
+  margin: 0 auto;           /* centers the content */
+  padding: 0 1rem;          /* a little breathing room on mobile */
+}
+
+.site-main {
+  padding: 2rem 0;
+}
+
+/* --- Responsive images (especially the recipe hero) --- */
+figure {
+  margin: 1.25rem 0;
+}
+
+.recipe-header-block + figure {
+  max-width: 720px;         /* cap the hero image width */
+  margin-left: auto;
+  margin-right: auto;       /* center the figure itself */
+}
+
+figure img {
+  display: block;
+  width: 100%;              /* scale down to container */
+  height: auto;
+  border-radius: 4px;       /* optional: subtle rounding */
+}
+
+/* Optional: make long lists breathe a bit */
+.recipe-list li + li { margin-top: .35rem; }
+
 
 .print-btn { position: relative; z-index: 1; }
 
