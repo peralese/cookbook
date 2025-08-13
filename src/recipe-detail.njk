@@ -1,22 +1,14 @@
 ---
 layout: base.njk
+pagination:
+  data: collections.recipes
+  size: 1
+  alias: r
+  addAllPagesToCollections: true
+permalink: "{{ r.urlPath }}"
 ---
 
-{# Defensive: prefer `recipe` if provided; otherwise try to infer from collections by URL #}
-{% set r = recipe %}
-{% if not r and collections and collections.recipes %}
-  {% for item in collections.recipes %}
-    {% if item.urlPath and item.urlPath == page.url %}
-      {% set r = item %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
-{% if not r %}
-  <h1>Recipe not found</h1>
-  <p>We couldn’t load this recipe’s data.</p>
-  <p><a href="{{ '/recipes/' | url }}">Back to All Recipes</a></p>
-{% else %}
+{# r = one recipe from collections.recipes #}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <a href="{{ '/' | url }}">Home</a>
@@ -47,12 +39,11 @@ layout: base.njk
   {% endif %}
 </header>
 
-{# ---- Render recipe fields; adjust to your schema as needed ---- #}
 {% if r.description %}<p class="description">{{ r.description }}</p>{% endif %}
 
 {% if r.image %}
   <figure>
-    <img src="{{ (r.image | url) }}" alt="{{ r.title }}">
+    <img src="{{ r.image | url }}" alt="{{ r.title or r.filename }}">
   </figure>
 {% endif %}
 
@@ -78,6 +69,13 @@ layout: base.njk
   </section>
 {% endif %}
 
+{% if r.remarks %}
+  <section>
+    <h2>Remarks</h2>
+    <p>{{ r.remarks }}</p>
+  </section>
+{% endif %}
+
 <footer class="detail-footer">
   <p>
     <a href="{{ '/recipes/' | url }}">← Back to All Recipes</a>
@@ -88,5 +86,4 @@ layout: base.njk
   </p>
 </footer>
 
-{% endif %}
 
