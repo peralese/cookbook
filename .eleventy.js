@@ -15,8 +15,8 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("safeJson", (v) => JSON.stringify(v, null, 2));
   eleventyConfig.addFilter("tagLabel", (s) => String(s || "").replace(/[’'"]/g, ""));
   eleventyConfig.addFilter("tagId", (s) =>
-    String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-"
-  ));
+    String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-")
+  );
 
   // Helper to build canonical recipe path (mirrors urlPath)
   eleventyConfig.addFilter("recipeUrlPath", (r) => {
@@ -32,16 +32,31 @@ module.exports = function (eleventyConfig) {
     return dt.getFullYear();
   });
 
-  // -------- Passthroughs (guarded) --------
-  if (fs.existsSync("content")) eleventyConfig.addPassthroughCopy("content");
+  // -------- Passthroughs & Watchers --------
+  if (fs.existsSync("content")) {
+    eleventyConfig.addPassthroughCopy("content");
+    eleventyConfig.addWatchTarget("content");
+  }
+  if (fs.existsSync("src/content")) {
+    eleventyConfig.addPassthroughCopy({ "src/content": "content" });
+    eleventyConfig.addWatchTarget("src/content");
+  }
   if (fs.existsSync("src/styles.css")) eleventyConfig.addPassthroughCopy("src/styles.css");
   if (fs.existsSync("src/_data/categories.json"))
     eleventyConfig.addPassthroughCopy({ "src/_data/categories.json": "categories.json" });
   if (fs.existsSync("src/search.js")) eleventyConfig.addPassthroughCopy("src/search.js");
-  if (fs.existsSync("src/images")) eleventyConfig.addPassthroughCopy("src/images");
-  if (fs.existsSync("src/print.css")) eleventyConfig.addPassthroughCopy("src/print.css");
-  if (fs.existsSync("content")) eleventyConfig.addWatchTarget("content");
-  if (fs.existsSync("src/print.css")) eleventyConfig.addWatchTarget("src/print.css");
+  if (fs.existsSync("src/images")) {
+    eleventyConfig.addPassthroughCopy("src/images");
+    eleventyConfig.addWatchTarget("src/images");
+  }
+  if (fs.existsSync("images")) {
+    eleventyConfig.addPassthroughCopy("images");
+    eleventyConfig.addWatchTarget("images");
+  }
+  if (fs.existsSync("src/print.css")) {
+    eleventyConfig.addPassthroughCopy("src/print.css");
+    eleventyConfig.addWatchTarget("src/print.css");
+  }
 
   // -------- Loader (single source of truth) --------
   function loadAllRecipes({ excludeDrafts = true } = {}) {
@@ -60,8 +75,8 @@ module.exports = function (eleventyConfig) {
     const all = [];
     const usedByCategory = new Map(); // slug -> Set of used slugs
 
-    for (const category of categories) {
-      const categoryPath = path.join(contentRoot, category);
+    for (const categoryFolder of categories) {
+      const categoryPath = path.join(contentRoot, categoryFolder);
       const files = fs.readdirSync(categoryPath).filter((f) => f.toLowerCase().endsWith(".json"));
 
       for (const file of files) {
@@ -72,21 +87,133 @@ module.exports = function (eleventyConfig) {
           if (excludeDrafts && data.draft === true) continue;
 
           const filename = file.replace(/\.json$/i, "");
-          data.category = category;
+
+          // Keep the human label and folder as-is (e.g., "01 - Breakfast")
+          data.category = data.category || data.Category || categoryFolder;
           data.filename = filename;
 
-          // Slugify category and title
-          const slugCategory = slugify(category, { lower: true, strict: true });
+          // ---- Canonicalize fields (support multiple casings) ----
+          const titleValue =
+            data.title || data.Title || data.name || data.Name ||
+            data.recipeTitle || (data.meta && (data.meta.title || data.meta.Title)) || filename;
+
+          const imageValue = data.image || data.Image || data.photo || data.Photo || null;
+
+          // May be in remarks; we’ll also extract below if present there
+          let yieldValue =
+            data.yield || data.Yield || data.servings || data.Servings || data.Makes || "";
+
+          let sourceValue =
+            data.source || data.Source || data.attribution || data.Attribution || data.Author || "";
+
+          const ingredientsValue =
+            data.ingredients || data.Ingredients || data.ingredient || data.Ingredient || null;
+
+          // Many of your JSONs use `instructions`
+          const directionsValue =
+            data.directions || data.Directions || data.instructions || data.Instructions || null;
+
+          let remarksValue =
+            data.remarks || data.Remarks || data.notes || data.Notes || data.Description || "";
+
+          // Extract "Yield:" and "Source:" from remarks if those fields are empty
+          if (remarksValue) {
+            if (!yieldValue) {
+              const m = remarksValue.match(/(?:^|\s)Yield:\s*(.+?)(?=(?:\s+Source:|$))/i);
+              if (m) {
+                yieldValue = m[1].trim();
+                remarksValue = (remarksValue.replace(m[0], "")).trim();
+              }
+            }
+            if (!sourceValue) {
+              const m2 = remarksValue.match(/(?:^|\s)Source:\s*(.+)$/i);
+              if (m2) {
+                sourceValue = m2[1].trim();
+                remarksValue = (remarksValue.replace(m2[0], "")).trim();
+              }
+            }
+          }
+
+          // Write canonical fields back so templates can rely on lowercase
+          data.title = String(titleValue);
+          if (ingredientsValue) data.ingredients = ingredientsValue;
+          if (directionsValue) data.directions = directionsValue;
+          data.remarks = remarksValue || "";
+          data.yield = yieldValue || "";
+          data.source = sourceValue || "";
+
+          // ---- Image resolution (robust) ----
+          if (imageValue && String(imageValue).trim()) {
+            const imgRaw = String(imageValue).trim().replace(/\\/g, "/");
+
+            // Absolute URL or site-absolute => use as-is.
+            if (/^https?:\/\//i.test(imgRaw) || imgRaw.startsWith("/")) {
+              data.imageUrl = imgRaw;
+            } else {
+              // Places to search (in order)
+              const searchDirs = [
+                categoryPath,                                           // content/<Category>/
+                path.join(categoryPath, "images"),                      // content/<Category>/images/
+                path.join(contentRoot, "images"),                       // content/images/
+                path.join(process.cwd(), "src", "images"),              // src/images/
+                path.join(process.cwd(), "images"),                     // images/
+              ].filter(p => fs.existsSync(p));
+
+              const wantedBase = path.basename(imgRaw, path.extname(imgRaw)).toLowerCase();
+              const wantedFullLower = imgRaw.toLowerCase();
+
+              let resolvedAbsPath = null;
+
+              for (const dir of searchDirs) {
+                const filesInDir = fs.readdirSync(dir);
+                // Prefer exact filename (case-insensitive)
+                let found = filesInDir.find(f => f.toLowerCase() === wantedFullLower);
+                if (!found) {
+                  // Then match by basename with any common extension
+                  const pics = filesInDir.filter(f => /\.(png|jpe?g|webp|gif|svg)$/i.test(f));
+                  found = pics.find(f => path.basename(f, path.extname(f)).toLowerCase() === wantedBase);
+                }
+                if (found) {
+                  resolvedAbsPath = path.join(dir, found);
+                  const dirNorm = dir.replace(/\\/g, "/").toLowerCase();
+                  if (dirNorm.startsWith(contentRoot.replace(/\\/g, "/").toLowerCase())) {
+                    // Anything under contentRoot publishes under /content
+                    const rel = path.relative(contentRoot, resolvedAbsPath).replace(/\\/g, "/");
+                    data.imageUrl = encodeURI(`/content/${rel}`);
+                  } else if (dirNorm.endsWith("/images") || dirNorm.includes("/src/images")) {
+                    // /images root
+                    const rel = path.basename(resolvedAbsPath); // keep it flat for /images
+                    data.imageUrl = encodeURI(`/images/${rel}`);
+                  } else {
+                    // Fallback: absolute path from project root
+                    const rel = path.relative(process.cwd(), resolvedAbsPath).replace(/\\/g, "/");
+                    data.imageUrl = encodeURI(`/${rel}`);
+                  }
+                  break;
+                }
+              }
+
+              if (!data.imageUrl) {
+                // Not found—fall back to category-relative path under /content and warn.
+                const fallback = encodeURI(`/content/${data.category}/${imgRaw}`);
+                data.imageUrl = fallback;
+                console.warn(`⚠️ Image not found by scanner for "${data.title}" -> tried "${imgRaw}". Using fallback: ${fallback}`);
+              }
+            }
+
+            data.image = imgRaw; // keep original
+          }
+
+          // ---- Slugs and URL path ----
+          const slugCategory = slugify(data.category, { lower: true, strict: true });
           data.slugCategory = slugCategory;
 
-          const baseTitle = data.title ? String(data.title) : String(filename);
-          const titleDashed = slugify(baseTitle, { lower: true, strict: true });
+          const titleDashed = slugify(data.title, { lower: true, strict: true });
           const fileDashed = slugify(filename, { lower: true, strict: true });
 
           if (!usedByCategory.has(slugCategory)) usedByCategory.set(slugCategory, new Set());
           const usedSet = usedByCategory.get(slugCategory);
 
-          // Ensure unique slug within category
           let uniqueDashed = titleDashed;
           if (usedSet.has(uniqueDashed)) {
             const candidate = `${titleDashed}-${fileDashed}`;
@@ -97,12 +224,12 @@ module.exports = function (eleventyConfig) {
           data.slugTitle = titleDashed;
           data.slugTitleUnique = uniqueDashed;
           data.slugTitleFlat = titleDashed.replace(/-/g, "");
-          data.id = `${category}/${filename}`;
+          data.id = `${categoryFolder}/${filename}`;
 
-          // *** Leading slash so `| url` + pathPrefix work on GitHub Pages
+          // Leading slash so `| url` works with pathPrefix on GitHub Pages
           data.urlPath = `/recipes/${slugCategory}/${uniqueDashed}/`;
 
-          // Normalize tags
+          // Normalize tags (string → array safety)
           if (Array.isArray(data.tags)) {
             data.tags = data.tags.map((t) => String(t || "").trim()).filter((t) => t.length > 0);
           }
@@ -186,6 +313,5 @@ module.exports = function (eleventyConfig) {
       : "/cookbook/",
   };
 };
-
 
 

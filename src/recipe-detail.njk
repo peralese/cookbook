@@ -6,9 +6,9 @@ pagination:
   alias: r
   addAllPagesToCollections: true
 permalink: "{{ r.urlPath }}"
+eleventyComputed:
+  title: "{{ r.title or r.filename }}"
 ---
-
-{# r = one recipe from collections.recipes #}
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <a href="{{ '/' | url }}">Home</a>
@@ -18,8 +18,9 @@ permalink: "{{ r.urlPath }}"
   &raquo; <a href="{{ '/recipes/' | url }}">All Recipes</a>
 </nav>
 
-<header>
+<div class="recipe-header-block">
   <h1>{{ r.title or r.filename }}</h1>
+
   {% if r.category %}
     <p class="meta">
       Category:
@@ -37,14 +38,16 @@ permalink: "{{ r.urlPath }}"
       {% endfor %}
     </p>
   {% endif %}
-</header>
+</div>
 
-{% if r.description %}<p class="description">{{ r.description }}</p>{% endif %}
-
-{% if r.image %}
+{% if r.imageUrl %}
   <figure>
-    <img src="{{ r.image | url }}" alt="{{ r.title or r.filename }}">
+    <img src="{{ r.imageUrl | url }}" alt="{{ r.title or r.filename }}">
   </figure>
+{% endif %}
+
+{% if r.description %}
+  <p class="description">{{ r.description }}</p>
 {% endif %}
 
 {% if r.ingredients %}
@@ -76,6 +79,20 @@ permalink: "{{ r.urlPath }}"
   </section>
 {% endif %}
 
+{% if r.yield and r.yield | trim %}
+  <section>
+    <h2>Yield</h2>
+    <p>{{ r.yield | trim }}</p>
+  </section>
+{% endif %}
+
+{% if r.source and r.source | trim %}
+  <section>
+    <h2>Source</h2>
+    <p>{{ r.source | trim }}</p>
+  </section>
+{% endif %}
+
 <footer class="detail-footer">
   <p>
     <a href="{{ '/recipes/' | url }}">← Back to All Recipes</a>
@@ -85,5 +102,9 @@ permalink: "{{ r.urlPath }}"
     {% endif %}
   </p>
 </footer>
+
+
+
+
 
 
