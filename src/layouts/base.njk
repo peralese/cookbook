@@ -5,7 +5,6 @@
   <title>{% if title %}{{ title }} · {% endif %}Cookbook</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {# Option A: load the exact CSS filename you keep (style.css by default) #}
   <link rel="stylesheet" href="{{ '/style.css' | url }}">
   <link rel="stylesheet" href="{{ '/print.css' | url }}" media="print">
 </head>
@@ -39,11 +38,9 @@
       </p>
     </div>
   </footer>
-
-  {# Optional client JS #}
-  {# <script src="{{ '/search.js' | url }}" defer></script> #}
 </body>
 </html>
+
 
 
 
