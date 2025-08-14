@@ -1,14 +1,19 @@
 ---
 permalink: /search-index.json
 eleventyExcludeFromCollections: true
+layout: null
 ---
 [
-{%- for r in collections.recipes %}
-  {
-    "title": {{ r.data.title | dump }},
-    "category": {{ (r.data.category or '') | dump }},
-    "tags": {{ (r.data.tags or []) | dump }},
-    "url": "{{ r.url | url }}"
-  }{% if not loop.last %},{% endif %}
+{%- for r in collections.recipes -%}
+  {{ {
+    title: r.title or r.filename or '',
+    category: r.category or '',
+    tags: r.tags or [],
+    url: r.urlPath or '/'
+  } | dump | safe }}
+  {%- if not loop.last -%},{%- endif -%}
 {%- endfor -%}
 ]
+
+
+

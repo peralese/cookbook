@@ -12,32 +12,32 @@ const debounce = (fn, ms = 150) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const input = document.getElementById('searchInput');
   const resultsEl = document.getElementById('results');
-
   if (!input || !resultsEl) return;
 
-  // Resolve index URL (pathPrefix-safe)
-  const indexUrl = (typeof window !== 'undefined' && window.SEARCH_INDEX_URL)
-    ? window.SEARCH_INDEX_URL
-    : '/search-index.json';
+  // Use the pathPrefix-safe URL provided by index.njk, else default
+  const indexUrl =
+    (typeof window !== 'undefined' && window.SEARCH_INDEX_URL) ||
+    '/search-index.json';
 
-  // Load index
+  // Load index (single attempt) + log
   let index = [];
   try {
     const res = await fetch(indexUrl, { credentials: 'same-origin' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     index = await res.json();
+    console.log('Search index loaded:', Array.isArray(index) ? index.length : 0, 'items');
   } catch (err) {
     console.error('Failed to load search index:', err);
     resultsEl.innerHTML = '<p>Search is temporarily unavailable.</p>';
     return;
   }
 
-  // Configure Fuse
+  // Configure Fuse (CDN script loaded in index.njk)
   const fuse = new Fuse(index, {
     includeScore: true,
     shouldSort: true,
     minMatchCharLength: 2,
-    threshold: 0.35,          // fuzziness: lower = stricter
+    threshold: 0.35, // lower = stricter
     ignoreLocation: true,
     keys: [
       { name: 'title',    weight: 0.7 },
@@ -67,8 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const search = debounce(q => {
     q = q.trim();
     if (!q) { resultsEl.innerHTML = ''; return; }
-    const results = fuse.search(q);
-    render(results);
+    render(fuse.search(q));
   });
 
   input.addEventListener('input', e => search(e.target.value));
