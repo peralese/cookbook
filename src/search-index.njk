@@ -1,0 +1,14 @@
+---
+permalink: /search-index.json
+eleventyExcludeFromCollections: true
+---
+[
+{%- for r in collections.recipes %}
+  {
+    "title": {{ r.data.title | dump }},
+    "category": {{ (r.data.category or '') | dump }},
+    "tags": {{ (r.data.tags or []) | dump }},
+    "url": "{{ r.url | url }}"
+  }{% if not loop.last %},{% endif %}
+{%- endfor -%}
+]

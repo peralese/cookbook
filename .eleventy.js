@@ -76,6 +76,12 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addWatchTarget("src/search.js");
   }
 
+  // Fuse.js search script → /assets/js/fuse-search.js
+if (fs.existsSync("src/assets/js/fuse-search.js")) {
+  eleventyConfig.addPassthroughCopy({ "src/assets/js/fuse-search.js": "assets/js/fuse-search.js" });
+  eleventyConfig.addWatchTarget("src/assets/js/fuse-search.js");
+}
+
   // -------- Loader (single source of truth) --------
   function loadAllRecipes({ excludeDrafts = true } = {}) {
     const contentRoot = fs.existsSync(path.join(__dirname, "src", "content"))
