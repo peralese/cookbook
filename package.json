@@ -13,6 +13,8 @@
   "type": "commonjs",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^2.1.1",
     "cross-env": "^7.0.3"
   }
 }

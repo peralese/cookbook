@@ -3,6 +3,11 @@ const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
 
+// ✅ Schema validation (Ajv)
+const Ajv = require("ajv/dist/2020");   // ✅ use the 2020 build
+const addFormats = require("ajv-formats");
+const recipeSchema = require("./src/_data/recipe.schema.json");
+
 module.exports = function (eleventyConfig) {
   // -------- Filters --------
   eleventyConfig.addFilter("slug", (s) =>
@@ -15,8 +20,8 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("safeJson", (v) => JSON.stringify(v, null, 2));
   eleventyConfig.addFilter("tagLabel", (s) => String(s || "").replace(/[’'"]/g, ""));
   eleventyConfig.addFilter("tagId", (s) =>
-    String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-")
-  );
+    String(s || "").toLowerCase().replace(/[’'"]/g, "").replace(/\s+/g, "-"
+  ));
   eleventyConfig.addFilter("recipeUrlPath", (r) => {
     if (!r) return "/";
     const cat = slugify(r.category || "", { lower: true, strict: true });
@@ -77,10 +82,15 @@ module.exports = function (eleventyConfig) {
   }
 
   // Fuse.js search script → /assets/js/fuse-search.js
-if (fs.existsSync("src/assets/js/fuse-search.js")) {
-  eleventyConfig.addPassthroughCopy({ "src/assets/js/fuse-search.js": "assets/js/fuse-search.js" });
-  eleventyConfig.addWatchTarget("src/assets/js/fuse-search.js");
-}
+  if (fs.existsSync("src/assets/js/fuse-search.js")) {
+    eleventyConfig.addPassthroughCopy({ "src/assets/js/fuse-search.js": "assets/js/fuse-search.js" });
+    eleventyConfig.addWatchTarget("src/assets/js/fuse-search.js");
+  }
+
+  // -------- Ajv setup (once) --------
+  const ajv = new Ajv({ allErrors: true, strict: false });
+  addFormats(ajv);
+  const validateRecipe = ajv.compile(recipeSchema);
 
   // -------- Loader (single source of truth) --------
   function loadAllRecipes({ excludeDrafts = true } = {}) {
@@ -251,6 +261,16 @@ if (fs.existsSync("src/assets/js/fuse-search.js")) {
             data.tags = data.tags.map((t) => String(t || "").trim()).filter((t) => t.length > 0);
           }
 
+          // ✅ Validate against JSON Schema (fail build on error)
+          const ok = validateRecipe(data);
+          if (!ok) {
+            const where = `${categoryFolder}/${file}`;
+            const details = validateRecipe.errors
+              .map(e => `• ${e.instancePath || "(root)"} ${e.message}`)
+              .join("\n");
+            throw new Error(`❌ Recipe schema validation failed for ${where}\n${details}`);
+          }
+
           all.push(data);
         } catch (e) {
           console.error(`❌ Failed to parse ${filePath}: ${e.message}`);
@@ -328,6 +348,7 @@ if (fs.existsSync("src/assets/js/fuse-search.js")) {
       : "/cookbook/",
   };
 };
+
 
 
 
