@@ -205,9 +205,9 @@ The config auto‑detects and passthrough‑copies the following if they exist:
 - 🔍 Enhance search UX (highlighted matches, keyboard navigation, “no results” state).  
 - 🖼️ Image improvements: responsive `<img srcset>` and basic lazy‑loading.  
 - 🧾 Print view: “Print Recipe” button confirmed; add a print‑friendly header with title/yield/source.  
+- 🧰 **Enhance existing “Add Recipe” helper** (CLI and Flask form in `recipe_editor.py`) with schema‑based field validation, inline feedback, and optional tag suggestions.
 
 **Medium‑term**  
-- 🧰 “Add Recipe” helper (local form or Netlify CMS) that writes valid JSON per schema.  
 - 🗂️ Category & tag housekeeping: optional lints to normalize capitalization and dedupe tags.  
 - ♿ Accessibility audit (focus order, contrast, skip links, landmarks).  
 - 🌐 i18n scaffolding (labels and headings via data files).  
@@ -229,4 +229,3 @@ MIT — use, modify, and share.
 ## 🙌 Credits
 
 Built by **Erick Perales** (GitHub: [peralese](https://github.com/peralese)) with help from the Eleventy community.
-
