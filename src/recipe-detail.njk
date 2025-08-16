@@ -9,7 +9,7 @@ permalink: "{{ r.urlPath }}"
 eleventyComputed:
   title: "{{ r.title or r.filename }}"
 ---
-
+<div class="recipe-page" data-title="{{ r.title or r.filename }}">
 <nav class="breadcrumbs" aria-label="Breadcrumb">
   <a href="{{ '/' | url }}">Home</a>
   {% if r.slugCategory %}
@@ -17,6 +17,7 @@ eleventyComputed:
   {% endif %}
   &raquo; <a href="{{ '/recipes/' | url }}">All Recipes</a>
 </nav>
+<div class="print:hidden"><button class="print-btn" type="button" onclick="window.print()" aria-label="Print Recipe">🖨️ Print Recipe</button></div>
 
 <div class="recipe-header-block">
   <h1>{{ r.title or r.filename }}</h1>
@@ -102,6 +103,10 @@ eleventyComputed:
     {% endif %}
   </p>
 </footer>
+
+<div class="print-header" style="display:none"><p class="print-sub">{% if r.yield %}<span><strong>Yield:</strong> {{ r.yield }}</span>{% endif %}{% if r.source %}&nbsp;&nbsp;<span><strong>Source:</strong> {{ r.source }}</span>{% endif %}</p><hr/></div>
+</div>
+
 
 
 

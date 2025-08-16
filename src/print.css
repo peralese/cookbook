@@ -81,3 +81,10 @@
   .site-nav, .breadcrumbs, .print-btn, footer { display: none !important; }
   @page { margin: 0.5in; }
 }
+
+@media print {
+  .print-header { display: block !important; margin-bottom: 0.25in; }
+  .print-header .print-sub { font-size: 10pt; color: #000; display: flex; gap: 1rem; flex-wrap: wrap; margin: 0 0 6px; }
+  .print-btn { display: none !important; }
+}
+

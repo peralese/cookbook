@@ -3,7 +3,7 @@
 ![CI](https://github.com/peralese/cookbook/actions/workflows/ci-build.yml/badge.svg) ![Deploy](https://github.com/peralese/cookbook/actions/workflows/deploy.yml/badge.svg)
 
 A static, mobile-friendly family cookbook built with **Eleventy**.  
-Recipes are stored as JSON in `content/<Category>/…` and rendered into clean pages with **pagination, categories, tags, breadcrumbs, print styles**, **client‑side search**, and **GitHub Pages** hosting under `/cookbook/`.
+Recipes are stored as JSON in `content/<Category>/…` and rendered into clean pages with **pagination, categories, tags, breadcrumbs, print styles**, **client-side search**, and **GitHub Pages** hosting under `/cookbook/`.
 
 ---
 
@@ -12,13 +12,14 @@ Recipes are stored as JSON in `content/<Category>/…` and rendered into clean p
 - **Stable URLs** for every recipe: `/recipes/<category>/<title>/`
 - **Collections-based build** (single source of truth from `content/`)
 - **Robust image resolver** (finds images next to JSON, in `images/`, etc.; handles case/extension differences)
-- **Path‑prefix safe** links & assets (works at `/cookbook/` on GitHub Pages)
+- **Path-prefix safe** links & assets (works at `/cookbook/` on GitHub Pages)
 - **Print stylesheet** for nice hard copies
+- **“Print Recipe” button** on detail pages with header (title / yield / source) in print view
 - **Clean dev workflow** with or without a path prefix
 - **Yield** and **Source** rendered as full sections (like Ingredients / Directions / Remarks)
-- **Client‑side search** using Fuse.js with fuzzy matching
+- **Client-side search** using Fuse.js with fuzzy matching
 - **Footer “Search” link** for quick access
-- **JSON Schema validation** on every recipe at build time (Ajv 2020‑12)
+- **JSON Schema validation** on every recipe at build time (Ajv 2020-12)
 
 ---
 
@@ -38,7 +39,7 @@ Recipes are stored as JSON in `content/<Category>/…` and rendered into clean p
 │  ├─ categories.njk             # Per-category pages (/category/<slug>/)
 │  ├─ tags.njk                   # /tags/ index page
 │  ├─ tag.njk                    # Per-tag pages (/tags/<slug>/)
-│  ├─ recipe-detail.njk          # One page per recipe
+│  ├─ recipe-detail.njk          # One page per recipe (includes print button)
 │  ├─ search/                    # Search page template (/search/)
 │  │  └─ index.njk
 │  ├─ search-index.njk           # Generates /search-index.json for Fuse.js
@@ -47,7 +48,7 @@ Recipes are stored as JSON in `content/<Category>/…` and rendered into clean p
 │  ├─ layouts/
 │  │  └─ base.njk                # Layout; all links use | url (pathPrefix-safe)
 │  ├─ style.css                  # Main stylesheet
-│  └─ print.css                  # Print stylesheet
+│  └─ print.css                  # Print stylesheet (print view header, layout)
 ├─ .eleventy.js                  # Config: data loader, collections, passthroughs, prefix, schema validation
 ├─ package.json
 └─ README.md
@@ -97,11 +98,11 @@ The loader in `.eleventy.js` reads each `content/<Category>/*.json`, normalizes 
 
 ---
 
-## ✅ Schema Validation (JSON Schema 2020‑12)
+## ✅ Schema Validation (JSON Schema 2020-12)
 
 We validate each recipe JSON against `src/_data/recipe.schema.json` during the Eleventy build using **Ajv**.
 
-- Draft: **2020‑12** (`$schema: "https://json-schema.org/draft/2020-12/schema"`)
+- Draft: **2020-12** (`$schema: "https://json-schema.org/draft/2020-12/schema"`)
 - Runtime: **Ajv 8 (2020 build)** + **ajv-formats**
 
 If validation fails, Eleventy logs which file failed and why, and the build stops.
@@ -115,7 +116,6 @@ npm i -D ajv@^8 ajv-formats@^2
 ### Implementation (in `.eleventy.js`)
 
 ```js
-// Use the 2020 build of Ajv for draft 2020-12 schemas
 const Ajv = require("ajv/dist/2020");
 const addFormats = require("ajv-formats");
 const recipeSchema = require("./src/_data/recipe.schema.json");
@@ -127,19 +127,10 @@ const validateRecipe = ajv.compile(recipeSchema);
 // ...when loading each recipe object:
 const ok = validateRecipe(data);
 if (!ok) {
-  const details = validateRecipe.errors.map(e => `• ${e.instancePath || "(root)"} ${e.message}`).join("\\n");
-  throw new Error(`Recipe schema validation failed for ${where}\\n${details}`);
+  const details = validateRecipe.errors.map(e => `• ${e.instancePath || "(root)"} ${e.message}`).join("\n");
+  throw new Error(`Recipe schema validation failed for ${where}\n${details}`);
 }
 ```
-
-### Troubleshooting
-
-- **Error:** `no schema with key or ref "https://json-schema.org/draft/2020-12/schema"`  
-  **Fix:** Ensure you’re importing `ajv/dist/2020` (not the default Ajv export), then reinstall deps:
-  ```bash
-  rm -rf node_modules package-lock.json
-  npm i
-  ```
 
 ---
 
@@ -149,11 +140,14 @@ if (!ok) {
 # Install dependencies
 npm install
 
-# Serve without prefix (browse at http://localhost:8080/)
-PATH_PREFIX=/ npm run serve
+# Install cross-env (for Windows/macOS/Linux compatibility)
+npm install --save-dev cross-env
 
-# Serve with /cookbook/ prefix (browse at http://localhost:8080/cookbook/)
+# Serve without prefix (browse at http://localhost:8080/)
 npm run serve
+
+# Or serve with explicit prefix (browse at http://localhost:8080/cookbook/)
+PATH_PREFIX=/cookbook/ npm run serve
 ```
 
 > The dev server respects `PATH_PREFIX` at runtime so you can test GitHub Pages behavior locally.
@@ -181,7 +175,7 @@ Environment variable(s):
   - `PATH_PREFIX=/` → site at domain root
   - `PATH_PREFIX=/cookbook/` → site under `/cookbook/` (default behavior in code)
 
-The config auto‑detects and passthrough‑copies the following if they exist:
+The config auto-detects and passthrough-copies the following if they exist:
 - `src/style.css` → `/style.css`
 - `src/print.css` → `/print.css`
 - `src/images/**` → `/images/**`
@@ -201,23 +195,22 @@ The config auto‑detects and passthrough‑copies the following if they exist:
 
 ## 🧭 Roadmap (next steps)
 
-**Near‑term**  
-- 🔒 Finalize `recipe.schema.json` field definitions (tighten types, require non‑empty arrays for `ingredients`/`directions`).  
+**Near-term**  
+- 🔒 Finalize `recipe.schema.json` field definitions (tighten types, require non-empty arrays for `ingredients`/`directions`).  
 - 🧪 Add a lightweight CI task (GitHub Actions) that runs `npm ci && npm run build` to validate schema and links.  
 - 🔍 Enhance search UX (highlighted matches, keyboard navigation, “no results” state).  
-- 🖼️ Image improvements: responsive `<img srcset>` and basic lazy‑loading.  
-- 🧾 Print view: “Print Recipe” button confirmed; add a print‑friendly header with title/yield/source.  
-- 🧰 **Enhance existing “Add Recipe” helper** (CLI and Flask form in `recipe_editor.py`) with schema‑based field validation, inline feedback, and optional tag suggestions.
+- 🖼️ Image improvements: responsive `<img srcset>` and basic lazy-loading.  
+- 🧰 **Enhance existing “Add Recipe” helper** (CLI and Flask form in `recipe_editor.py`) with schema-based field validation, inline feedback, and optional tag suggestions.
 
-**Medium‑term**  
+**Medium-term**  
 - 🗂️ Category & tag housekeeping: optional lints to normalize capitalization and dedupe tags.  
 - ♿ Accessibility audit (focus order, contrast, skip links, landmarks).  
 - 🌐 i18n scaffolding (labels and headings via data files).  
 - 🗺️ Sitemap & RSS/JSON feed for recipe updates.  
 
-**Nice‑to‑have**  
+**Nice-to-have**  
 - 🧮 Nutrition/notes optional sections with schema support.  
-- 🧷 Per‑recipe assets folder convention (e.g., `content/<Cat>/<Recipe>/images/*`).  
+- 🧷 Per-recipe assets folder convention (e.g., `content/<Cat>/<Recipe>/images/*`).  
 - 🧰 Dev script to migrate old JSON formats to the normalized schema automatically.
 
 ---
@@ -231,4 +224,5 @@ MIT — use, modify, and share.
 ## 🙌 Credits
 
 Built by **Erick Perales** (GitHub: [peralese](https://github.com/peralese)) with help from the Eleventy community.
+
 
