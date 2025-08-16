@@ -1,5 +1,7 @@
 # 📖 Family Cookbook (Eleventy / 11ty)
 
+![CI](https://github.com/peralese/cookbook/actions/workflows/ci-build.yml/badge.svg) ![Deploy](https://github.com/peralese/cookbook/actions/workflows/deploy.yml/badge.svg)
+
 A static, mobile-friendly family cookbook built with **Eleventy**.  
 Recipes are stored as JSON in `content/<Category>/…` and rendered into clean pages with **pagination, categories, tags, breadcrumbs, print styles**, **client‑side search**, and **GitHub Pages** hosting under `/cookbook/`.
 
@@ -229,3 +231,4 @@ MIT — use, modify, and share.
 ## 🙌 Credits
 
 Built by **Erick Perales** (GitHub: [peralese](https://github.com/peralese)) with help from the Eleventy community.
+
