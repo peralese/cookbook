@@ -41,12 +41,6 @@ eleventyComputed:
   {% endif %}
 </div>
 
-<div class="print-hint">
-  <button type="button" class="print-btn" onclick="window.print()" aria-label="Print this recipe">
-    Print Recipe
-  </button>
-</div>
-
 
 {% if r.imageUrl %}
   <figure>
@@ -110,6 +104,9 @@ eleventyComputed:
     {% endif %}
   </p>
 </footer>
+
+<div type="button" class="print-header" style="display:none"><p class="print-sub">{% if r.yield %}<span><strong>Yield:</strong> {{ r.yield }}</span>{% endif %}{% if r.source %}&nbsp;&nbsp;<span><strong>Source:</strong> {{ r.source }}</span>{% endif %}</p><hr/></div>
+</div>
 
 
 
