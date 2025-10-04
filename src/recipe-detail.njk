@@ -41,6 +41,13 @@ eleventyComputed:
   {% endif %}
 </div>
 
+<div class="print-hint">
+  <button type="button" class="print-btn" onclick="window.print()" aria-label="Print this recipe">
+    Print Recipe
+  </button>
+</div>
+
+
 {% if r.imageUrl %}
   <figure>
     <img src="{{ r.imageUrl | url }}" alt="{{ r.title or r.filename }}">

@@ -64,27 +64,29 @@
     border: 0 !important;
     break-after: avoid;
   }
+
+  /* Hide the print button AND its wrapper (and footer) when printing */
+  .print-hint,
+  .print-btn,
+  footer {
+    display: none !important;
+  }
+
   header.recipe-hero::before,
   header.recipe-hero::after,
   .recipe-page::before,
   .recipe-page::after {
     content: none !important;
   }
+
   header.recipe-hero .recipe-title {
     display: block !important;
     color: #000 !important;
-    font-size: 18pt !important;     /* tweak to taste */
+    font-size: 18pt !important;
     margin: 0 0 8pt !important;
   }
+}
 
   /* Keep site chrome hidden */
   .site-nav, .breadcrumbs, .print-btn, footer { display: none !important; }
   @page { margin: 0.5in; }
-}
-
-@media print {
-  .print-header { display: block !important; margin-bottom: 0.25in; }
-  .print-header .print-sub { font-size: 10pt; color: #000; display: flex; gap: 1rem; flex-wrap: wrap; margin: 0 0 6px; }
-  .print-btn { display: none !important; }
-}
-
