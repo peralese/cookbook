@@ -10,104 +10,143 @@ eleventyComputed:
   title: "{{ r.title or r.filename }}"
 ---
 <div class="recipe-page" data-title="{{ r.title or r.filename }}">
-<nav class="breadcrumbs" aria-label="Breadcrumb">
-  <a href="{{ '/' | url }}">Home</a>
-  {% if r.slugCategory %}
-    &raquo; <a href="{{ ('/category/' + r.slugCategory + '/') | url }}">{{ r.category or r.slugCategory }}</a>
-  {% endif %}
-  &raquo; <a href="{{ '/recipes/' | url }}">All Recipes</a>
-</nav>
-<div class="print:hidden"><button class="print-btn" type="button" onclick="window.print()" aria-label="Print Recipe">🖨️ Print Recipe</button></div>
-
-<div class="recipe-header-block">
-  <h1>{{ r.title or r.filename }}</h1>
-
-  {% if r.category %}
-    <p class="meta">
-      Category:
-      <a href="{{ ('/category/' + (r.slugCategory or (r.category | slug)) + '/') | url }}">
-        {{ r.category }}
-      </a>
-    </p>
-  {% endif %}
-
-  {% if r.tags and r.tags.length %}
-    <p class="tags">
-      Tags:
-      {% for t in r.tags %}
-        <a class="tag" href="{{ ('/tags/' + (t | slug) + '/') | url }}">{{ t }}</a>{% if not loop.last %}, {% endif %}
-      {% endfor %}
-    </p>
-  {% endif %}
-</div>
-
-
-{% if r.imageUrl %}
-  <figure>
-    <img src="{{ r.imageUrl | url }}" alt="{{ r.title or r.filename }}">
-  </figure>
-{% endif %}
-
-{% if r.description %}
-  <p class="description">{{ r.description }}</p>
-{% endif %}
-
-{% if r.ingredients %}
-  <section>
-    <h2>Ingredients</h2>
-    <ul>
-      {% for item in r.ingredients %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </section>
-{% endif %}
-
-{% if r.directions %}
-  <section>
-    <h2>Directions</h2>
-    <ol>
-      {% for step in r.directions %}
-        <li>{{ step }}</li>
-      {% endfor %}
-    </ol>
-  </section>
-{% endif %}
-
-{% if r.remarks %}
-  <section>
-    <h2>Remarks</h2>
-    <p>{{ r.remarks }}</p>
-  </section>
-{% endif %}
-
-{% if r.yield and r.yield | trim %}
-  <section>
-    <h2>Yield</h2>
-    <p>{{ r.yield | trim }}</p>
-  </section>
-{% endif %}
-
-{% if r.source and r.source | trim %}
-  <section>
-    <h2>Source</h2>
-    <p>{{ r.source | trim }}</p>
-  </section>
-{% endif %}
-
-<footer class="detail-footer">
-  <p>
-    <a href="{{ '/recipes/' | url }}">← Back to All Recipes</a>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ '/' | url }}">Home</a>
     {% if r.slugCategory %}
-      &nbsp;•&nbsp;
-      <a href="{{ ('/category/' + r.slugCategory + '/') | url }}">More in {{ r.category }}</a>
+      <span aria-hidden="true">-&gt;</span>
+      <a href="{{ ('/category/' + r.slugCategory + '/') | url }}">{{ r.category or r.slugCategory }}</a>
     {% endif %}
-  </p>
-</footer>
+    <span aria-hidden="true">-&gt;</span>
+    <a href="{{ '/recipes/' | url }}">All Recipes</a>
+  </nav>
 
-<div type="button" class="print-header" style="display:none"><p class="print-sub">{% if r.yield %}<span><strong>Yield:</strong> {{ r.yield }}</span>{% endif %}{% if r.source %}&nbsp;&nbsp;<span><strong>Source:</strong> {{ r.source }}</span>{% endif %}</p><hr/></div>
+  <div class="recipe-layout">
+    <article class="recipe-content">
+      <button class="print-btn" type="button" onclick="window.print()" aria-label="Print Recipe">
+        <span aria-hidden="true">[ ]</span> Print Recipe
+      </button>
+
+      <h1>{{ r.title or r.filename }}</h1>
+
+      {% if r.category %}
+        <p class="meta">
+          Category:
+          <a href="{{ ('/category/' + (r.slugCategory or (r.category | slug)) + '/') | url }}">
+            {{ r.category }}
+          </a>
+        </p>
+      {% endif %}
+
+      {% if r.imageUrl %}
+        <figure>
+          <img src="{{ r.imageUrl | url }}" alt="{{ r.title or r.filename }}">
+        </figure>
+      {% endif %}
+
+      {% if r.description %}
+        <p class="description">{{ r.description }}</p>
+      {% endif %}
+
+      {% if r.ingredients %}
+        <section class="recipe-section">
+          <h2><span class="section-icon" aria-hidden="true">[]</span> Ingredients</h2>
+          <ul>
+            {% for item in r.ingredients %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if r.directions %}
+        <section class="recipe-section">
+          <h2><span class="section-icon" aria-hidden="true">#</span> Directions</h2>
+          <ol>
+            {% for step in r.directions %}
+              <li>{{ step }}</li>
+            {% endfor %}
+          </ol>
+        </section>
+      {% endif %}
+
+      {% if r.remarks %}
+        <section class="recipe-section">
+          <h2><span class="section-icon" aria-hidden="true">!</span> Remarks</h2>
+          <p>{{ r.remarks }}</p>
+        </section>
+      {% endif %}
+
+      {% if r.yield and r.yield | trim %}
+        <section class="recipe-section compact-section">
+          <h2><span class="section-icon" aria-hidden="true">x</span> Yield</h2>
+          <p>{{ r.yield | trim }}</p>
+        </section>
+      {% endif %}
+
+      {% if r.source and r.source | trim %}
+        <section class="recipe-section compact-section">
+          <h2><span class="section-icon" aria-hidden="true">i</span> Source</h2>
+          <p>{{ r.source | trim }}</p>
+        </section>
+      {% endif %}
+    </article>
+
+    <aside class="recipe-sidebar" aria-label="Recipe details">
+      <section class="sidebar-card">
+        <h2><span class="info-icon" aria-hidden="true">i</span> Recipe Info</h2>
+        {% if r.category %}
+          <h3>Category</h3>
+          <p><a href="{{ ('/category/' + (r.slugCategory or (r.category | slug)) + '/') | url }}">{{ r.category }}</a></p>
+        {% endif %}
+        {% if r.tags and r.tags.length %}
+          <h3>Tags</h3>
+          <div class="tag-cloud">
+            {% for t in r.tags %}
+              <a class="tag" href="{{ ('/tags/' + (t | slug) + '/') | url }}">{{ t }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if r.yield and r.yield | trim %}
+          <h3>Yield</h3>
+          <p>{{ r.yield | trim }}</p>
+        {% endif %}
+      </section>
+
+      {% if collections.categories and collections.categories.length %}
+        <section class="sidebar-card">
+          <h2>Categories</h2>
+          <ul class="sidebar-list">
+            {% for cat in collections.categories %}
+              {% if loop.index <= 8 %}
+                <li>
+                  <a href="{{ ('/category/' + cat.slug + '/') | url }}">{{ cat.label }}</a>
+                  <span>{{ cat.items | length }}</span>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <p class="card-link"><a href="{{ '/categories/' | url }}">View all categories <span aria-hidden="true">-&gt;</span></a></p>
+        </section>
+      {% endif %}
+
+      {% if collections.tagged and (collections.tagged | keys | length) %}
+        <section class="sidebar-card">
+          <h2>Popular Tags</h2>
+          <div class="tag-cloud">
+            {% for tag in collections.tagged | keys | sort %}
+              {% if loop.index <= 12 %}
+                <a class="tag" href="{{ ('/tags/' + (tag | slug) + '/') | url }}">{{ tag }}</a>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p class="card-link"><a href="{{ '/tags/' | url }}">View all tags <span aria-hidden="true">-&gt;</span></a></p>
+        </section>
+      {% endif %}
+    </aside>
+  </div>
+
+  <div type="button" class="print-header" style="display:none"><p class="print-sub">{% if r.yield %}<span><strong>Yield:</strong> {{ r.yield }}</span>{% endif %}{% if r.source %}&nbsp;&nbsp;<span><strong>Source:</strong> {{ r.source }}</span>{% endif %}</p><hr/></div>
 </div>
-
 
 
 

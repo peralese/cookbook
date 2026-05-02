@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const input = document.getElementById('searchInput');
   const resultsEl = document.getElementById('results');
   if (!input || !resultsEl) return;
+  const initialQuery = new URLSearchParams(window.location.search).get('q') || '';
 
   // Use the pathPrefix-safe URL provided by index.njk, else default
   const indexUrl =
@@ -71,5 +72,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   input.addEventListener('input', e => search(e.target.value));
+  if (initialQuery) {
+    input.value = initialQuery;
+    render(fuse.search(initialQuery.trim()));
+  }
 });
-

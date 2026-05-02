@@ -4,13 +4,53 @@ title: Home
 breadcrumbs: ""
 ---
 
-<h1>Welcome to My Family Cookbook</h1>
-<p>Explore some of our family’s favorite recipes!</p>
+<section class="home-section">
+  <h2 class="section-title">Browse by Category</h2>
+  {% if collections.categories and collections.categories.length %}
+    <div class="category-grid">
+      {% for cat in collections.categories %}
+        {% if loop.index <= 5 %}
+          <a class="category-card" href="{{ ('/category/' + cat.slug + '/') | url }}">
+            <span class="category-icon" aria-hidden="true">
+              {% if 'breakfast' in cat.slug %}
+                <svg viewBox="0 0 32 32"><path d="M7 13h15v4a7 7 0 0 1-7 7h-1a7 7 0 0 1-7-7v-4Z"/><path d="M22 14h3a3 3 0 0 1 0 6h-3M10 8c-1-2 1-3 0-5M15 8c-1-2 1-3 0-5M20 8c-1-2 1-3 0-5M6 26h19"/></svg>
+              {% elif 'baking' in cat.slug %}
+                <svg viewBox="0 0 32 32"><path d="M7 20c3-8 7-12 9-12s6 4 9 12c-4 5-14 5-18 0Z"/><path d="M11 17c2 2 8 2 10 0M16 8v14M11 10c-1-2-1-4 1-6M21 10c1-2 1-4-1-6"/></svg>
+              {% elif 'appetizers' in cat.slug %}
+                <svg viewBox="0 0 32 32"><path d="M7 16h18l-2 10H9L7 16Z"/><path d="M10 16c0-5 3-8 6-8s6 3 6 8M10 20h12M12 11l-4-4M20 11l4-4"/></svg>
+              {% elif 'desserts' in cat.slug %}
+                <svg viewBox="0 0 32 32"><path d="M7 23h18v4H7zM9 16h14v7H9zM11 11h10v5H11zM16 5v6M13 8h6"/></svg>
+              {% else %}
+                <svg viewBox="0 0 32 32"><path d="M8 11h16v14H8zM11 11V8h10v3M8 16h16M12 6h8M6 25h20"/></svg>
+              {% endif %}
+            </span>
+            <strong>{{ cat.label }}</strong>
+            <small>{{ cat.items | length }} recipes</small>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p class="center-link"><a href="{{ '/categories/' | url }}">View all categories <span aria-hidden="true">-&gt;</span></a></p>
+  {% else %}
+    <p>No categories found.</p>
+  {% endif %}
+</section>
 
-<ul>
-  <li><a href="{{ '/recipes/page/1/' | url }}">All Recipes</a></li>
-  <li><a href="{{ '/categories/' | url }}">Browse Categories</a></li>
-  <li><a href="{{ '/tags/' | url }}">Browse Tags</a></li>
-</ul>
-
+<section class="home-section recent-section">
+  <h2 class="section-title">Recently Added Recipes</h2>
+  {% if collections.recipes and collections.recipes.length %}
+    <div class="recipe-table" role="list">
+      {% for recipe in collections.recipes %}
+        {% if loop.index <= 6 %}
+          <a class="recipe-row" href="{{ recipe.urlPath | url }}" role="listitem">
+            <span>{{ recipe.title or recipe.filename }}</span>
+            <small>{{ recipe.category }}</small>
+            <span aria-hidden="true">-&gt;</span>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <p class="center-link"><a href="{{ '/recipes/page/1/' | url }}">View all recipes <span aria-hidden="true">-&gt;</span></a></p>
+  {% endif %}
+</section>
 
