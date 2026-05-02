@@ -5,6 +5,8 @@
 A static, mobile-friendly family cookbook built with **Eleventy**.  
 Recipes are stored as JSON in `content/<Category>/…` and rendered into clean pages with **pagination, categories, tags, breadcrumbs, print styles**, **client-side search**, and **GitHub Pages** hosting under `/cookbook/`.
 
+The current design uses a green-and-cream family cookbook theme with a branded header, illustrated hero artwork, category cards on the home page, recipe detail sidebars, and print-friendly recipe pages.
+
 ---
 
 ## ✨ Highlights
@@ -18,6 +20,10 @@ Recipes are stored as JSON in `content/<Category>/…` and rendered into clean p
 - **Clean dev workflow** with or without a path prefix
 - **Yield** and **Source** rendered as full sections (like Ingredients / Directions / Remarks)
 - **Client-side search** using Fuse.js with fuzzy matching
+- **Header search form** that passes queries through to `/search/?q=...`
+- **Illustrated cookbook hero** using extracted PNG assets from `src/images/`
+- **Home page category cards** and recently added recipe rows
+- **Two-column recipe detail layout** with recipe info, category, and tag sidebar cards
 - **Footer “Search” link** for quick access
 - **JSON Schema validation** on every recipe at build time (Ajv 2020-12)
 
@@ -45,9 +51,12 @@ Recipes are stored as JSON in `content/<Category>/…` and rendered into clean p
 │  ├─ search-index.njk           # Generates /search-index.json for Fuse.js
 │  ├─ assets/
 │  │  └─ js/fuse-search.js       # Client-side search logic
+│  ├─ images/
+│  │  ├─ cookbook-hero-left.png  # Left hero illustration
+│  │  └─ cookbook-hero-right.png # Right hero illustration
 │  ├─ layouts/
 │  │  └─ base.njk                # Layout; all links use | url (pathPrefix-safe)
-│  ├─ style.css                  # Main stylesheet
+│  ├─ styles.css                 # Main stylesheet, copied to /style.css
 │  └─ print.css                  # Print stylesheet (print view header, layout)
 ├─ .eleventy.js                  # Config: data loader, collections, passthroughs, prefix, schema validation
 ├─ package.json
@@ -93,8 +102,25 @@ The loader in `.eleventy.js` reads each `content/<Category>/*.json`, normalizes 
 
 - `/search-index.json` built at compile time with all recipes (title, tags, category, URL)
 - `/search/` page uses Fuse.js for fuzzy matching
+- Header search submits to `/search/?q=<query>` and pre-populates the search page
 - Debounced input for instant results
 - Displays matched recipe title, category, tags, and optional match score
+
+---
+
+## 🎨 Theme & Assets
+
+The site theme is implemented primarily in `src/styles.css` and shared through `src/layouts/base.njk`.
+
+- Header and footer use a dark green branded treatment.
+- The hero uses two transparent PNG illustrations:
+  - `src/images/cookbook-hero-left.png`
+  - `src/images/cookbook-hero-right.png`
+- Eleventy copies `src/images/**` to `/images/**` during build.
+- The home page renders category cards and recent recipe rows from collections.
+- Recipe detail pages use a two-column layout with the recipe content on the left and metadata/category/tag cards on the right.
+
+When previewing locally, use `npm run serve` so links resolve from `/`. For GitHub Pages output under `/cookbook/`, use `npm run build`.
 
 ---
 
@@ -137,11 +163,8 @@ if (!ok) {
 ## 🧪 Local Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Install cross-env (for Windows/macOS/Linux compatibility)
-npm install --save-dev cross-env
+# Install dependencies from the lockfile
+npm ci
 
 # Serve without prefix (browse at http://localhost:8080/)
 npm run serve
@@ -177,6 +200,7 @@ Environment variable(s):
 
 The config auto-detects and passthrough-copies the following if they exist:
 - `src/style.css` → `/style.css`
+- `src/styles.css` → `/style.css`
 - `src/print.css` → `/print.css`
 - `src/images/**` → `/images/**`
 - `src/assets/js/fuse-search.js` → `/assets/js/fuse-search.js`
@@ -224,5 +248,3 @@ MIT — use, modify, and share.
 ## 🙌 Credits
 
 Built by **Erick Perales** (GitHub: [peralese](https://github.com/peralese)) with help from the Eleventy community.
-
-
