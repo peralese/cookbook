@@ -1,5 +1,6 @@
 {
   "title": "Chocolate Granola",
+  "category": "02 - Baking",
   "requires": "",
   "ingredients": [
     "Dry Ingredients",
@@ -25,6 +26,6 @@
   ],
   "remarks": "",
   "yield": "",
-  "source": "SQuarantine Cooking - Homemade Chocolate Granola Cereal with Almond Butter - Fit Men Cook Baking powder biscuits",
-  "category": "01 - Breakfast"
+  "source": "Squarantine Cooking - Homemade Chocolate Granola Cereal with Almond Butter - Fit Men Cook Baking powder biscuits",
+  "tags": []
 }

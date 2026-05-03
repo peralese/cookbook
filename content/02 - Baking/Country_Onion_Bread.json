@@ -1,5 +1,6 @@
 {
   "title": "Country Onion Bread",
+  "category": "02 - Baking",
   "requires": "",
   "ingredients": [
     "6 tablespoons (¾ stick) unsalted butter",
@@ -30,11 +31,10 @@
     "Knead the dough into a smooth 3-inch-high round.  (Or, divide the dough in half and knead each half into smooth 3-inch-high round.)  Transfer to a prepared baking sheet.  Cover the dough with a moistened kitchen towel and again let it rise in a warm, draft-free area until almost double in volume, approximately 35 minutes.",
     "Position a rack in the center of the oven and preheat the oven to 375° F.",
     "Make 3 parallel, ¼-inch-deep slashes, on the tops of the round loafs.  Brush lightly with milk.  Sprinkle with ½ teaspoon each of caraway and dill seeds.  Bake the rounds until they are a rich brown and sound hollow when rapped on the bottoms, about 40 minutes.  If the tops brown too quickly, cover with some parchment.",
-    "Cool the bread for 2 hours on a rack before slicing.",
-    "Remarks:  You can wrap the bread in plastic wrap and store it at room temperature overnight.  To reheat the next day unwrap the bread and place in a preheated oven, 350° F. for 5 to 7 minutes.  If you make two loafs, you can put one in the freezer wrapped in foil and save it for another occasion."
+    "Cool the bread for 2 hours on a rack before slicing."
   ],
-  "remarks": "Makes 1 large or 2 small round loafs.",
-  "yield": "An Onion Sampler by Edena Sheldon, Bon Appétit, January 1985.",
-  "source": "",
-  "category": "02 - Baking"
+  "remarks": "You can wrap the bread in plastic wrap and store it at room temperature overnight.  To reheat the next day unwrap the bread and place in a preheated oven, 350° F. for 5 to 7 minutes.  If you make two loafs, you can put one in the freezer wrapped in foil and save it for another occasion.",
+  "yield": "Makes 1 large or 2 small round loafs.",
+  "source": "An Onion Sampler by Edena Sheldon, Bon Appétit, January 1985.",
+  "tags": []
 }
