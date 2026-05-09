@@ -5,11 +5,12 @@ layout: null
 ---
 [
 {%- for r in collections.recipes -%}
+  {%- set recipeUrl = (r.urlPath or '/') | url -%}
   {{ {
     title: r.title or r.filename or '',
     category: r.category or '',
     tags: r.tags or [],
-    url: r.urlPath or '/'
+    url: recipeUrl
   } | dump | safe }}
   {%- if not loop.last -%},{%- endif -%}
 {%- endfor -%}
