@@ -1,6 +1,5 @@
 {
   "title": "Spice Rub",
-  "category": "12 - Miscellaneous",
   "requires": "",
   "ingredients": [
     "5 tablespoons coarse (kosher or sea) salt",
@@ -16,5 +15,6 @@
   ],
   "remarks": "",
   "yield": "Makes about 1 cup, enough for 6 to 8 pounds of meat, poultry, or seafood.",
-  "source": "The Barbecue Bible, (Included in:  There’s More to Grilling Chicken than a Spice Rub and Hot Coals article by Tina Danze), Texas Taste Section, The Dallas Morning News, Wednesday, May 22, 2002."
+  "source": "The Barbecue Bible, (Included in:  There’s More to Grilling Chicken than a Spice Rub and Hot Coals article by Tina Danze), Texas Taste Section, The Dallas Morning News, Wednesday, May 22, 2002.",
+  "category": "12 - Miscellaneous"
 }
