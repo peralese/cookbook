@@ -1,5 +1,6 @@
 {
   "title": "Dad’s Fruitcake",
+  "category": "08 - Desserts",
   "requires": "",
   "ingredients": [
     "One 6-ounce can of Frozen Orange Juice; or, 3 ounces of orange juice + three ounces of red wine (or maraschino cherry liquid)",
@@ -25,7 +26,7 @@
     "Wrap in foil or plastic and store in a cool place for a week.  After a week put paper towels soaked in wine or brandy around each loaf and rewrap.  Again place in a cool place for a week.  (May need to refresh the wine or brandy periodically.)"
   ],
   "remarks": "",
-  "yield": "v",
+  "yield": "",
   "source": "Perales’ Family Recipe.",
-  "category": "08 - Desserts"
+  "tags": []
 }
