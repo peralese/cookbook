@@ -112,6 +112,13 @@ eleventyComputed:
         {% endif %}
       </section>
 
+      <section class="sidebar-card made-card" data-recipe-key="{{ r.urlPath }}">
+        <h2><span class="info-icon" aria-hidden="true">&#10003;</span> Cooking History</h2>
+        <p class="last-made" aria-live="polite">You have not marked this recipe as made yet.</p>
+        <button class="made-button" type="button">I made this today</button>
+        <p class="made-storage-note">Saved on this device.</p>
+      </section>
+
       {% if collections.categories and collections.categories.length %}
         <section class="sidebar-card">
           <h2>Categories</h2>
@@ -148,8 +155,44 @@ eleventyComputed:
   <div type="button" class="print-header" style="display:none"><p class="print-sub">{% if r.yield %}<span><strong>Yield:</strong> {{ r.yield }}</span>{% endif %}{% if r.source %}&nbsp;&nbsp;<span><strong>Source:</strong> {{ r.source }}</span>{% endif %}</p><hr/></div>
 </div>
 
+<script>
+  (function () {
+    const card = document.querySelector(".made-card");
+    if (!card) return;
 
+    const storageKey = "cookbook:last-made:" + card.dataset.recipeKey;
+    const message = card.querySelector(".last-made");
+    const button = card.querySelector(".made-button");
+    const dateFormatter = new Intl.DateTimeFormat(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
 
+    function showDate(dateString) {
+      const date = new Date(dateString + "T12:00:00");
+      if (Number.isNaN(date.getTime())) return;
+      message.textContent = "Last made: " + dateFormatter.format(date);
+    }
 
+    try {
+      const savedDate = localStorage.getItem(storageKey);
+      if (savedDate) showDate(savedDate);
 
-
+      button.addEventListener("click", function () {
+        const today = new Date();
+        const localDate = [
+          today.getFullYear(),
+          String(today.getMonth() + 1).padStart(2, "0"),
+          String(today.getDate()).padStart(2, "0")
+        ].join("-");
+        localStorage.setItem(storageKey, localDate);
+        showDate(localDate);
+        button.textContent = "Made today!";
+      });
+    } catch (error) {
+      button.disabled = true;
+      message.textContent = "Cooking history is unavailable in this browser.";
+    }
+  }());
+</script>

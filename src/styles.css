@@ -565,6 +565,43 @@ p {
   margin-bottom: 0.65rem;
 }
 
+.made-card .last-made {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.made-button {
+  width: 100%;
+  cursor: pointer;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--green-800);
+  border-radius: 6px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--green-900), var(--green-950));
+  font: inherit;
+  font-weight: 700;
+}
+
+.made-button:hover {
+  filter: brightness(1.08);
+}
+
+.made-button:focus-visible {
+  outline: 3px solid var(--sage-300);
+  outline-offset: 2px;
+}
+
+.made-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sidebar-card .made-storage-note {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -788,6 +825,7 @@ p {
   .cookbook-hero,
   .breadcrumbs,
   .print-btn,
+  .made-card,
   .recipe-sidebar,
   .header-search,
   .site-nav {
