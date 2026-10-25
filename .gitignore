@@ -17,4 +17,5 @@ __pycache__/
 
 # 📸 User-uploaded images
 
-
+# Temporary recipe import files
+/inputs/
