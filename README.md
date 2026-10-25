@@ -248,3 +248,41 @@ MIT — use, modify, and share.
 ## 🙌 Credits
 
 Built by **Erick Perales** (GitHub: [peralese](https://github.com/peralese)) with help from the Eleventy community.
+
+### Import and review a recipe locally
+
+Run the local editor (this is separate from the static GitHub Pages website):
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python recipe_editor.py
+```
+
+Open http://127.0.0.1:5000. Choose a category, upload a recipe photo or
+`.docx` / UTF-8 `.txt` document, or paste text. Images support PNG, JPEG,
+TIFF, BMP, and WebP, with a 12 MB upload limit. Install the **Tesseract OCR**
+command on your computer for image extraction (on Ubuntu: `sudo apt install
+ tesseract-ocr`). Older `.doc` files must first be saved as `.docx`.
+
+Extraction runs locally. Headings such as Ingredients, Instructions, Directions,
+Method, Notes, Yield, and Source are recognized. Without headings, quantities, short ingredient names, and cooking verbs help
+suggest ingredient and instruction sections. Wrapped instruction lines are joined.
+Unclassified text remains in Notes; suggestions still need review, especially for
+handwriting, multiple columns, or multiple recipes on one page. Check quantities and temperatures carefully. The extracted text
+stays visible during review, and you can edit every section, add family memories,
+source information, equipment, and comma-separated tags before saving.
+
+Importing does **not** write a recipe. Only **Save reviewed recipe** writes JSON
+under `content/<Category>/`; existing filenames cannot be overwritten by a new
+recipe. Existing recipes can also be opened and edited. Saving is local: run
+`npm run build` and use the normal repository deployment to publish. Keep this
+editor bound to localhost; it is not a hosted multi-user submission service.
+
+After a successful save, the editor removes the imported source from `inputs/`
+when its filename and contents exactly match the uploaded file. Other input files
+are retained. Failed imports, validation errors, and filename conflicts do not
+remove the source. If the source changes during review, it is retained; a cleanup
+failure is reported after saving. Files uploaded from outside `inputs/` are not
+deleted. Restart the editor and re-import to enable cleanup for a review started
+before this feature was installed.
